@@ -1,0 +1,28 @@
+{
+  "name": "tiny-hall-2192",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "SIGNUPS",
+      "id": "14c24f6c81c24de7bf5a66ac90485a59"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "tripndarain.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.tripndarain.com",
+      "custom_domain": true
+    }
+  ]
+}
