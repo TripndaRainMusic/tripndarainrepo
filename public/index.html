@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset=utf-8><title>TripN DaRain | The Saga</title><meta name="description" content="Bass music, questionable decisions, and the never-ending TripN DaRain saga."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#050507;
@@ -17,7 +17,7 @@
     --cyan:#00e6ff;
     --lime:#c3ff3d;
     --purple:#b34bff;
-    --font-display:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    --font-display:'Shrikhand','Space Grotesk',system-ui,-apple-system,sans-serif;
     --font-body:'Inter',system-ui,-apple-system,sans-serif;
     --max:1180px;
     --radius:20px;
@@ -393,6 +393,17 @@
     .section{ padding:3.2rem 0; }
     .hero{ padding:3.2rem 0 3.6rem; }
   }
+
+  .ring-text text{ font-family:'Space Grotesk',system-ui,sans-serif !important; }
+  /* Logo-style display font (Shrikhand has one weight — avoid faux-bold) */
+  h1,h2,h3,h4,.nav-logo,.globe-word,.ticker-track span,.video-title,.track-title,.saga-locked h4,
+  .transmission-name,.char-name,.t-title{ font-weight:400 !important; letter-spacing:.005em; }
+  .hero h1, .section-title{
+    background:linear-gradient(170deg,#ffffff 0%,#d6e6ff 22%,#8fa6c9 40%,#ffd1f3 55%,#a4f6ff 70%,#ececff 85%,#a3aec6 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(75,58,107,.9)) drop-shadow(0 0 14px rgba(160,200,255,.28));
+    line-height:1.12; padding-bottom:.08em;
+  }
 </style>
 
 <canvas id="rain-canvas" aria-hidden="true"></canvas>
@@ -400,7 +411,7 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="#top" class="nav-logo">TRIPN <span>DARAIN</span></a>
+    <a href="#top" class="nav-logo">TRIPn<span>DaRAIN</span></a>
     <ul class="nav-links" id="nav-links">
       <li><a href="#videos" data-nav>Videos</a></li>
       <li><a href="#music" data-nav>Music</a></li>
@@ -424,17 +435,17 @@
       <div class="ring ring-a" aria-hidden="true"></div>
       <svg class="ring-text" viewBox="0 0 200 200" aria-hidden="true">
         <defs><path id="ringPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-        <text><textPath href="#ringPath" startOffset="0%">WORLD DOMINATION DEPARTMENT &#8226; PROUDLY PRESENTS &#8226; WORLD DOMINATION DEPARTMENT &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
+        <text><textPath href="#ringPath" startOffset="0%">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; BASS DREAMS RECORDS &#8226; </textPath></text>
       </svg>
       <div class="globe">
         <div class="globe-lcd" aria-hidden="true"></div>
-        <div class="globe-word"><span>TripN</span><span>DaRain</span></div>
+        <div class="globe-word"><span>TRIPn</span><span>DaRAIN</span></div>
       </div>
     </div>
-    <div class="eyebrow">World Domination Department</div>
+    <div class="eyebrow">THE SAMETHING WE DO EVERYNIGHT</div>
     <h1>THE NEVER-ENDING<br>SAGA.</h1>
-    <p class="hero-sub">Rain conjures melodies sharp enough to draw blood. Trip forges bass heavy enough to crack foundations. No past. No mercy. Only the downpour.</p>
-    <p class="hero-tags">Los Angeles &middot; Psytrance &middot; Drum &amp; Bass &middot; Bass House</p>
+    <p class="hero-sub">Some nights a melody starts a track. Some nights the bass finishes it. Some nights are for world domination.</p>
+    <p class="hero-tags">PSY-TRANCE &middot; DRUM &amp; BASS &middot; HOUSE</p>
     <div class="hero-actions">
       <a href="#videos" class="btn btn-primary">▶ Watch the Chaos</a>
       <a href="#saga" class="btn btn-ghost">Enter the Saga</a>
@@ -444,17 +455,16 @@
   <!-- TICKER -->
   <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
-      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA CONTINUES ✦ WORLD DOMINATION DEPARTMENT ✦ PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA CONTINUES ✦ WORLD DOMINATION DEPARTMENT ✦&nbsp;</span>
-      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA CONTINUES ✦ WORLD DOMINATION DEPARTMENT ✦ PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA CONTINUES ✦ WORLD DOMINATION DEPARTMENT ✦&nbsp;</span>
+      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA ✦ WORLD DOMINATION ✦ BASS DREAMS RECORDS ✦ ELECTRONIC UMBRELLA ✦ HOUSE ✦ THE SAMETHING WE DO EVERYNIGHT ✦&nbsp;</span>
+      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA ✦ WORLD DOMINATION ✦ BASS DREAMS RECORDS ✦ ELECTRONIC UMBRELLA ✦ HOUSE ✦ THE SAMETHING WE DO EVERYNIGHT ✦&nbsp;</span>
     </div>
   </div>
 
   <!-- VIDEOS -->
   <section class="section" id="videos">
     <div class="section-head">
-      <div class="section-label">The Channel</div>
-      <h2 class="section-title">Watch it happen.</h2>
-      <p class="section-desc">Five transmissions and counting. Tap play, or take it straight to YouTube.</p>
+      <div class="section-label">The Saga</div>
+      <h2 class="section-title">WATCH IT HAPPEN</h2>
     </div>
     <div class="video-grid">
 
@@ -536,9 +546,8 @@
   <!-- MUSIC -->
   <section class="section" id="music">
     <div class="section-head">
-      <div class="section-label">The Soundtrack</div>
-      <h2 class="section-title">Six ways in.</h2>
-      <p class="section-desc">Every track's another chapter. Press play and keep the saga moving.</p>
+      <div class="section-label">Listen to These</div>
+      <p class="section-desc">Press play and keep the saga moving.</p>
     </div>
     <div class="track-grid">
 
@@ -604,16 +613,16 @@
   <!-- SAGA -->
   <section class="section" id="saga">
     <div class="section-head">
-      <div class="section-label">The Saga</div>
-      <h2 class="section-title">Every track is a chapter.</h2>
-      <p class="section-desc">Two minds. One never-ending story. Rain brings the melodies. Trip brings the chaos.</p>
+      <div class="section-label">The Saga of TripN DaRain</div>
+      <h2 class="section-title">Every night</h2>
+      <p class="section-desc">It starts raining. The melodies get sharper. The bass gets heavier. Nobody leaves.</p>
     </div>
 
     <div class="saga-ep">
       <div>
         <div class="saga-ep-label">Episode 01</div>
-        <h3>The Runner</h3>
-        <p>Security was checking the line. Trip saw an opportunity. Rain saw the consequences. Neither had a plan that survived the next ten seconds. Field note: two minds, one saga &mdash; documenting every strange stop on the road.</p>
+        <h3>MAKE THEM LISTEN</h3>
+        <p>&ldquo;The lab was silent except for the gentle hiss of the soundproof door&hellip;&rdquo; Rain paces slowly in his lightly glowing hat&hellip; Trip sits on the floor cross-legged with a bass.</p>
       </div>
       <div class="saga-art">
         <img src="/img/rain-5.webp" alt="Rain, mid-shrug" loading="lazy">
@@ -622,7 +631,7 @@
 
     <div class="saga-locked-grid">
       <div class="saga-locked ep2">
-        <h4>Episode 02 &middot; Coming Soon</h4>
+        <h4>Episode 02 &middot; FUCK THE SILANCE is Coming Soon</h4>
         <p>More stories incoming. Every festival can become another episode.</p>
       </div>
       <div class="saga-locked ep3">
@@ -671,7 +680,7 @@
   <!-- CHARACTERS -->
   <section class="section" id="characters">
     <div class="section-head">
-      <div class="section-label">World Domination Department</div>
+      <div class="section-label">World Domination</div>
       <h2 class="section-title">The Alliance</h2>
       <p class="section-desc">He writes melodies that make angels cry acid. He writes bass lines that make devils flinch. Together they became TripN DaRain.</p>
     </div>
@@ -688,8 +697,8 @@
           <button class="pose-dot" data-img="/img/trip-5.webp"><img src="/img/trip-5.webp" alt="Trip pose 5"></button>
         </div>
         <h3 class="char-name">Trip</h3>
-        <div class="char-role">Chaos &middot; Bass &middot; The Spark</div>
-        <p class="char-bio">The mouse with the TNR cap, purple beard, and zero chill. He brings the energy that turns a quiet night into a problem &mdash; and the bassline that turns the problem into a drop.</p>
+        <div class="char-role">Chaos &middot; Bass &middot; Side Quest Legend</div>
+        <p class="char-bio">He brings the energy that turns a quiet night into a problem &mdash; and the bassline that turns the problem into a drop.</p>
       </article>
 
       <article class="char-card" data-character="rain">
@@ -702,13 +711,13 @@
           <button class="pose-dot" data-img="/img/rain-5.webp"><img src="/img/rain-5.webp" alt="Rain pose 5"></button>
         </div>
         <h3 class="char-name">Rain</h3>
-        <div class="char-role">Melody &middot; Focus &middot; The Calm</div>
-        <p class="char-bio">White mask. Feathered fedora. Blue suit, orange tie. Cool under pressure, dangerous when he isn't. He turns chaos into something that actually hits.</p>
+        <div class="char-role">Focused &middot; Melody &middot; Master Mind</div>
+        <p class="char-bio">Cool under pressure, dangerous when he isn't. He turns chaos into something that actually hits.</p>
       </article>
 
     </div>
 
-    <p class="char-quote">Two anonymous forces. One unholy alliance. No past. No mercy. Only the downpour.</p>
+    <p class="char-quote">Suddenly&mdash; a rumble. Not thunder. Not bass. Something deeper. The ground beneath the Hardee&rsquo;s starts to beat.</p>
   </section>
 
   <div class="divider"></div>
