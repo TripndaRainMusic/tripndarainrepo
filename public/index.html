@@ -74,7 +74,52 @@
       radial-gradient(ellipse 55% 40% at 50% 100%, rgba(179,75,255,.07), transparent 60%);
   }
 
-  .wrap{ max-width:var(--max); margin:0 auto; position:relative; z-index:1; }
+  /* storm logo: fades in behind content once you leave the hero, clearer the longer you stay */
+  .storm-logo{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; filter:blur(10px);
+    transition:opacity 1.8s ease, filter 1.8s ease;
+  }
+  .storm-logo img{
+    width:min(74vw, 520px); max-height:78vh; height:auto; object-fit:contain;
+    filter:drop-shadow(0 0 40px rgba(0,230,255,.18)) drop-shadow(0 0 70px rgba(255,45,149,.12));
+  }
+  .wrap{ max-width:var(--max); margin:0 auto; position:relative; z-index:1; transition:opacity .9s ease; }
+  .nav{ transition:opacity .9s ease; }
+  .storm-logo img{ transition:filter .9s ease; }
+
+  /* "peek behind the rain": fade the page away so the logo takes over */
+  body.peek .wrap, body.peek .nav{ opacity:0; pointer-events:none; }
+  body.flash .storm-logo img{ filter:brightness(2.3) drop-shadow(0 0 60px rgba(200,230,255,.6)); transition:filter .05s; }
+  body.peek .storm-logo{ opacity:.95 !important; filter:blur(0) !important; }
+  body.peek .storm-logo img{ filter:drop-shadow(0 0 50px rgba(0,230,255,.35)) drop-shadow(0 0 90px rgba(255,45,149,.3)); }
+
+  /* weather report pill */
+  .storm-pill{
+    position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:60;
+    transform:translate(-50%, 140%); opacity:0; transition:transform .6s cubic-bezier(.2,.9,.3,1.2), opacity .4s ease;
+    display:flex; align-items:center; gap:.55rem; max-width:calc(100vw - 24px);
+    padding:.5rem .5rem .5rem .95rem; border-radius:999px;
+    background:rgba(11,11,18,.88); border:1px solid rgba(0,230,255,.35);
+    box-shadow:0 0 22px rgba(0,230,255,.18), 0 8px 30px rgba(0,0,0,.5);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    font:600 .82rem/1.25 var(--font-body); color:var(--text);
+  }
+  .storm-pill.show{ transform:translate(-50%, 0); opacity:1; }
+  .storm-pill .sp-text{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .storm-pill button{
+    border:0; cursor:pointer; font:inherit; border-radius:999px;
+  }
+  .storm-pill .sp-peek{
+    flex:none; padding:.45rem .85rem; color:#050507;
+    background:linear-gradient(120deg, var(--cyan), var(--pink)); font-weight:700;
+    animation:peekpulse 2.2s ease-in-out infinite;
+  }
+  .storm-pill .sp-x{ flex:none; width:28px; height:28px; background:transparent; color:var(--text-dim); font-size:1rem; }
+  .storm-pill .sp-x:hover{ color:var(--text); }
+  @keyframes peekpulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,45,149,.55);} 50%{ box-shadow:0 0 0 7px rgba(255,45,149,0);} }
+  @media (prefers-reduced-motion: reduce){ .storm-pill .sp-peek{ animation:none; } }
 
   /* ===== NAV ===== */
   .nav{
@@ -131,7 +176,7 @@
   .ring-b{ inset:9%; border:1px solid rgba(255,45,149,.22); animation:spin-rev 22s linear infinite; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
   @keyframes spin-rev{ to{ transform:rotate(-360deg); } }
-  .ring-text{ position:absolute; inset:12%; animation:spin 26s linear infinite; }
+  .ring-text{ position:absolute; inset:12%; width:76%; height:76%; overflow:visible; animation:spin 26s linear infinite; }
   .ring-text text{
     fill:var(--text-muted); font-family:var(--font-display); font-weight:600;
     font-size:9.5px; letter-spacing:2.5px; text-transform:uppercase;
@@ -170,6 +215,71 @@
   @media (prefers-reduced-motion: reduce){
     .laser-a, .laser-b, .laser-c, .ring-a, .ring-b, .ring-text, .globe-lcd, .globe-word{ animation:none; }
   }
+  /* ---- the easy button (hero logo = play) ---- */
+  button.globe{
+    appearance:none; -webkit-appearance:none; padding:0; margin:0; font:inherit; color:inherit;
+    cursor:pointer; z-index:2; -webkit-tap-highlight-color:transparent;
+    transition:transform .12s ease, box-shadow .3s ease;
+  }
+  button.globe:hover{ transform:scale(1.03); }
+  button.globe:active{ transform:scale(.93); }
+  button.globe:focus-visible{ outline:2px solid var(--cyan); outline-offset:6px; }
+  .easy-icon{
+    position:absolute; left:50%; bottom:13%; width:22px; height:22px; transform:translateX(-50%);
+    z-index:2; fill:var(--text); opacity:.8; filter:drop-shadow(0 0 6px rgba(0,230,255,.7));
+  }
+  .easy-icon .i-pause{ display:none; }
+  .globe.playing .easy-icon .i-play{ display:none; }
+  .globe.playing .easy-icon .i-pause{ display:inline; }
+  .globe.playing{ animation:beat .4286s ease-out infinite; }   /* ~140 BPM */
+  @keyframes beat{
+    0%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 80px rgba(255,45,149,.55), 0 0 140px rgba(0,230,255,.35); }
+    100%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 40px rgba(255,45,149,.2), 0 0 80px rgba(0,230,255,.1); }
+  }
+  .globe.bonk{ animation:bonk .35s ease; }
+  @keyframes bonk{ 0%{ transform:scale(.9);} 60%{ transform:scale(1.06);} 100%{ transform:scale(1);} }
+  .easy-bubble{
+    position:absolute; top:4%; right:-2%; z-index:3; pointer-events:none;
+    max-width:9.5rem; padding:.55rem .8rem; border-radius:16px 16px 16px 4px;
+    background:var(--text); color:#050507; text-align:left;
+    font:700 .82rem/1.2 var(--font-body);
+    box-shadow:0 0 22px rgba(255,45,149,.35), 0 6px 18px rgba(0,0,0,.5);
+    transform-origin:0% 100%; animation:bubblebob 2.6s ease-in-out infinite;
+  }
+  .easy-bubble::after{
+    content:""; position:absolute; left:-4px; bottom:-9px; width:18px; height:14px;
+    background:var(--text); clip-path:polygon(30% 0, 100% 0, 0 100%);
+  }
+  .easy-bubble.asking{ pointer-events:auto; max-width:11rem; }
+  .easy-bubble{ transition:opacity .45s ease, visibility .45s; }
+  .easy-bubble.gone{ opacity:0; visibility:hidden; pointer-events:none; }
+  .eb-btns{ display:flex; gap:.35rem; margin-top:.45rem; }
+  .eb-btns button{
+    border:0; cursor:pointer; border-radius:999px; padding:.38rem .65rem;
+    font:700 .76rem/1 var(--font-body);
+  }
+  .eb-yes{ background:linear-gradient(120deg, var(--cyan), var(--pink)); color:#050507; }
+  .eb-no{ background:rgba(5,5,7,.1); color:#050507; }
+  .easy-bubble.pop{ animation:bubblepop .35s cubic-bezier(.2,.9,.3,1.5); }
+  @keyframes bubblebob{ 0%,100%{ transform:translateY(0) rotate(-2deg);} 50%{ transform:translateY(-5px) rotate(1deg);} }
+  @keyframes bubblepop{ 0%{ transform:scale(.6);} 100%{ transform:scale(1);} }
+  @media (max-width:640px){ .easy-bubble{ right:-1%; top:0; font-size:.78rem; max-width:8.5rem; } }
+  @media (prefers-reduced-motion: reduce){ .easy-bubble, .globe.playing{ animation:none; } }
+  /* SoundCloud mini-player dock: stays hidden while the logo drives playback, slides up if a tap is needed */
+  .sc-dock{
+    position:fixed; left:50%; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:70;
+    width:min(480px, calc(100vw - 24px)); padding:.55rem .55rem .6rem; border-radius:18px;
+    background:rgba(11,11,18,.96); border:1px solid rgba(255,45,149,.4);
+    box-shadow:0 0 26px rgba(255,45,149,.25), 0 10px 34px rgba(0,0,0,.6);
+    transform:translate(-50%, calc(100% + 40px)); opacity:0; pointer-events:none;
+    transition:transform .5s cubic-bezier(.2,.9,.3,1.1), opacity .35s ease;
+  }
+  .sc-dock.open{ transform:translate(-50%, 0); opacity:1; pointer-events:auto; }
+  .sc-dock-head{ display:flex; align-items:center; gap:.5rem; padding:0 .2rem .45rem .35rem; }
+  .sc-now{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font:600 .8rem/1.2 var(--font-body); color:var(--text); }
+  .sc-close{ flex:none; width:28px; height:28px; border:0; border-radius:50%; background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; }
+  .sc-dock iframe{ display:block; width:100%; height:166px; border:0; border-radius:12px; }
+  .storm-pill .sp-pause{ flex:none; width:32px; height:32px; background:rgba(255,255,255,.08); color:var(--text); }
   .logo-mark-small{ width:34px; height:auto; opacity:.85; border-radius:6px; margin:0 auto .75rem; }
 
   /* ---- ticker ---- */
@@ -177,12 +287,12 @@
     border-block:1px solid var(--border); overflow:hidden; white-space:nowrap;
     background:var(--bg-elevated); position:relative; z-index:1;
   }
-  .ticker-track{ display:inline-flex; animation:ticker 26s linear infinite; }
+  .ticker-track{ display:flex; width:max-content; animation:ticker 26s linear infinite; will-change:transform; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
   .ticker-track span{
     font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:.03em;
-    color:var(--text-dim); padding:.85rem 0;
+    color:var(--text-dim); padding:.85rem 0; flex:none; line-height:1.4;
   }
-  @keyframes ticker{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @keyframes ticker{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-50%,0,0); } }
   @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; overflow-x:auto; } }
   .hero h1{
     font-size:clamp(2.1rem, 7vw, 3.6rem); font-weight:700; letter-spacing:-.02em; line-height:1.03;
@@ -533,6 +643,20 @@
 
 <canvas id="rain-canvas" aria-hidden="true"></canvas>
 <div class="bg-glow" aria-hidden="true"></div>
+<div class="storm-logo" id="storm-logo" aria-hidden="true"><img src="/img/tnr-mark.webp" alt="" decoding="async"></div>
+<div class="storm-pill" id="storm-pill" role="status" aria-live="polite">
+  <span class="sp-text" id="storm-text">☔ Drizzle detected…</span>
+  <button type="button" class="sp-pause" id="storm-pause" aria-label="Pause music" hidden>❚❚</button>
+  <button type="button" class="sp-peek" id="storm-peek">👀 Peek</button>
+  <button type="button" class="sp-x" id="storm-x" aria-label="Dismiss rain report">✕</button>
+</div>
+<div class="sc-dock" id="sc-dock" aria-hidden="true">
+  <div class="sc-dock-head">
+    <span class="sc-now" id="sc-now">🎵 Do you TripN DaRain?</span>
+    <button type="button" class="sc-close" id="sc-close" aria-label="Hide player">✕</button>
+  </div>
+  <iframe id="sc-frame" title="TripN DaRain on SoundCloud" allow="autoplay; encrypted-media" scrolling="no" frameborder="no" height="166"></iframe>
+</div>
 
 <nav class="nav">
   <div class="nav-inner">
@@ -563,11 +687,16 @@
       <div class="ring ring-a" aria-hidden="true"></div>
       <svg class="ring-text" viewBox="0 0 200 200" aria-hidden="true">
         <defs><path id="ringPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-        <text><textPath href="#ringPath" startOffset="0%">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; BASS DREAMS RECORDS &#8226; </textPath></text>
+        <text><textPath href="#ringPath" startOffset="0" textLength="489" lengthAdjust="spacing">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
       </svg>
-      <div class="globe">
-        <div class="globe-lcd" aria-hidden="true"></div>
-        <div class="globe-word"><span>TRIPn</span><span>DaRAIN</span></div>
+      <button type="button" class="globe" id="easy-btn" aria-label="Play TripN DaRain" aria-pressed="false">
+        <span class="globe-lcd" aria-hidden="true"></span>
+        <span class="globe-word"><span>TRIPn</span><span>DaRAIN</span></span>
+        <span class="easy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="100%" height="100%"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-pause" d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg></span>
+      </button>
+      <div class="easy-bubble asking gone" id="easy-bubble" role="dialog" aria-live="polite" aria-label="Play music?">
+        <span class="eb-text">Can we play you<br>some music?</span>
+        <span class="eb-btns"><button type="button" class="eb-yes" id="eb-yes">🔊 Yes</button><button type="button" class="eb-no" id="eb-no">Not now</button></span>
       </div>
     </div>
     <div class="eyebrow">THE SAMETHING WE DO EVERYNIGHT</div>
@@ -1246,12 +1375,200 @@ window.TNR = {
     });
   }
 
+  // ---- the easy button: hero logo plays the SoundCloud playlist ----
+  var easyBtn = document.getElementById('easy-btn');
+  var easyBubble = document.getElementById('easy-bubble');
+  var pauseBtn = document.getElementById('storm-pause');
+  var scDock = document.getElementById('sc-dock');
+  var scFrame = document.getElementById('sc-frame');
+  var scNow = document.getElementById('sc-now');
+  var SC_PLAYLIST_URL = 'https://soundcloud.com/trip-n-da-rain/sets/listen-to-these';
+  var SC_WIDGET_SRC = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent('https://api.soundcloud.com/playlists/2214702131') +
+    '&color=%23ff2d95&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+  var LINES_PLAY = ['Easy.<br>Now it’s a problem.', 'Told you.<br>Easy.', 'Volume up.<br>Trust us.'];
+  var LINES_PAUSE = ['Okay, fine.<br>Press again.', 'Quiet mode.<br>Boring, but okay.'];
+  var presses = 0, widget = null, widgetReady = false, wantPlay = false, isPlaying = false, nudgeTimer = null, dockTimer = null;
+
+  var bubbleTimer = null;
+  function showBubble(ms){
+    if (!easyBubble) return;
+    easyBubble.classList.remove('gone');
+    easyBubble.classList.remove('pop'); void easyBubble.offsetWidth; easyBubble.classList.add('pop');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(function(){ easyBubble.classList.add('gone'); }, ms);
+  }
+  function say(html, ms){
+    if (!easyBubble) return;
+    easyBubble.classList.remove('asking');
+    easyBubble.innerHTML = html;
+    showBubble(ms || 3800);
+  }
+  // pop the question in a beat after the page has loaded, then let it drift away
+  function askSoon(){ setTimeout(function(){ if (easyBubble && easyBubble.classList.contains('asking')) showBubble(9000); }, 1200); }
+  if (document.readyState === 'complete') askSoon(); else window.addEventListener('load', askSoon);
+  if (easyBubble){
+    easyBubble.addEventListener('pointerenter', function(){ clearTimeout(bubbleTimer); });
+    easyBubble.addEventListener('focusin', function(){ clearTimeout(bubbleTimer); });
+  }
+
+  function setPlaying(on){
+    isPlaying = on;
+    if (easyBtn){ easyBtn.classList.toggle('playing', on); easyBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); easyBtn.setAttribute('aria-label', on ? 'Pause TripN DaRain' : 'Play TripN DaRain'); }
+    if (pauseBtn) pauseBtn.hidden = !on;
+  }
+  function openDock(stayMs){
+    if (!scDock) return;
+    scDock.classList.add('open'); scDock.setAttribute('aria-hidden', 'false');
+    clearTimeout(dockTimer);
+    if (stayMs) dockTimer = setTimeout(closeDock, stayMs);
+  }
+  function closeDock(){
+    if (!scDock) return;
+    clearTimeout(dockTimer);
+    scDock.classList.remove('open'); scDock.setAttribute('aria-hidden', 'true');
+  }
+  function openSoundCloud(){
+    say('Opening SoundCloud…<br>Still easy.');
+    window.open(SC_PLAYLIST_URL, '_blank', 'noopener');
+  }
+
+  // load the widget quietly after the page is up, so it's ready by the time someone taps
+  var widgetLoading = false;
+  function loadWidget(){
+    if (widgetLoading || !scFrame) return;
+    widgetLoading = true;
+    scFrame.src = SC_WIDGET_SRC;
+    var js = document.createElement('script');
+    js.src = 'https://w.soundcloud.com/player/api.js';
+    js.async = true;
+    js.onload = function(){
+      if (!window.SC || !SC.Widget) return;
+      widget = SC.Widget(scFrame);
+      var E = SC.Widget.Events;
+      widget.bind(E.READY, function(){ widgetReady = true; if (wantPlay) widget.play(); });
+      widget.bind(E.PLAY, function(){
+        clearTimeout(nudgeTimer);
+        var first = !isPlaying;
+        setPlaying(true);
+        if (wantPlay && first) say(LINES_PLAY[(presses - 1 + LINES_PLAY.length) % LINES_PLAY.length]);
+        wantPlay = false;
+        if (scDock && scDock.classList.contains('open')) openDock(2500);
+        widget.getCurrentSound(function(snd){ if (snd && snd.title && scNow) scNow.textContent = '🎵 ' + snd.title; });
+      });
+      widget.bind(E.PAUSE, function(){ setPlaying(false); });
+      widget.bind(E.FINISH, function(){
+        widget.getSounds(function(list){ widget.getCurrentSoundIndex(function(i){ if (list && i >= list.length - 1) setPlaying(false); }); });
+      });
+    };
+    js.onerror = function(){ widgetLoading = false; };
+    document.head.appendChild(js);
+  }
+  window.addEventListener('load', function(){ setTimeout(loadWidget, 1500); });
+
+  function startMusic(){
+    wantPlay = true;
+    loadWidget();
+    if (widget && widgetReady) widget.play();
+    else say('Loading the tunes…', 2500);
+    // some phones only let SoundCloud play from a tap inside its own player; show it if we're not rolling yet
+    clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function(){
+      if (isPlaying) return;
+      if (!widget){ openSoundCloud(); return; }
+      openDock();
+      say('Your phone wants one more tap.<br>Hit ▶ in the player 👇', 6000);
+    }, 2600);
+  }
+  function stopMusic(){
+    wantPlay = false;
+    if (widget) widget.pause();
+    setPlaying(false);
+  }
+
+  if (easyBtn){
+    easyBtn.addEventListener('click', function(){
+      easyBtn.classList.remove('bonk'); void easyBtn.offsetWidth; easyBtn.classList.add('bonk');
+      presses++;
+      if (!isPlaying) startMusic();
+      else { stopMusic(); say(LINES_PAUSE[(presses - 1) % LINES_PAUSE.length]); }
+    });
+    easyBtn.addEventListener('animationend', function(e){ if (e.animationName === 'bonk') easyBtn.classList.remove('bonk'); });
+    if (pauseBtn) pauseBtn.addEventListener('click', stopMusic);
+    var scClose = document.getElementById('sc-close');
+    if (scClose) scClose.addEventListener('click', closeDock);
+    // the bubble asks first; "Yes" is the tap browsers need before sound can play
+    var ebYes = document.getElementById('eb-yes'), ebNo = document.getElementById('eb-no');
+    if (ebYes) ebYes.addEventListener('click', function(){ easyBtn.click(); });
+    if (ebNo) ebNo.addEventListener('click', function(){ say('No problem.<br>Press the logo<br>when you’re ready.'); });
+  }
+
+  // ---- storm: after you scroll past the hero, the rain builds and the old logo surfaces ----
+  var STORM_RAMP = 150;              // seconds past the hero until the storm is at full strength
+  var storm = 0, stormSecs = 0, pastHero = false;
+  var stormLogo = document.getElementById('storm-logo');
+  var heroEl = document.querySelector('.hero');
+  if (heroEl && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      pastHero = !entries[0].isIntersecting;
+      paintStormLogo();
+    }, { threshold: 0 }).observe(heroEl);
+  }
+  var rootStyle = document.documentElement.style;
+  function paintStormLogo(){
+    if (!stormLogo) return;
+    stormLogo.style.opacity = pastHero ? (0.10 + storm * 0.40).toFixed(3) : '0';
+    stormLogo.style.filter = 'blur(' + (8 - storm * 7.5).toFixed(1) + 'px)';
+    // cards turn to glass as the storm builds so the logo shows through them
+    var a = pastHero ? (0.94 - storm * 0.36) : 0.97;
+    rootStyle.setProperty('--surface', 'rgba(18,16,25,' + a.toFixed(3) + ')');
+    rootStyle.setProperty('--surface-2', 'rgba(23,21,31,' + a.toFixed(3) + ')');
+    rootStyle.setProperty('--bg-elevated', 'rgba(11,11,18,' + a.toFixed(3) + ')');
+    updatePill();
+  }
+
+  // weather report pill: tells people something is happening back there
+  var pill = document.getElementById('storm-pill');
+  var pillText = document.getElementById('storm-text');
+  var pillDismissed = false, peekTimer = null;
+  var REPORTS = [
+    [0.12, '☔ Drizzle detected…'],
+    [0.40, '🌧️ Something’s behind the rain…'],
+    [0.75, '⛈️ Downpour. Look back there.'],
+    [0.98, '🚨 Flood warning!']
+  ];
+  function updatePill(){
+    if (!pill) return;
+    var msg = null;
+    for (var i = 0; i < REPORTS.length; i++){ if (storm >= REPORTS[i][0]) msg = REPORTS[i][1]; }
+    if (msg && pillText.textContent !== msg){ pillText.textContent = msg; pillDismissed = false; }
+    pill.classList.toggle('show', !!msg && pastHero && !pillDismissed);
+  }
+  function peek(){
+    document.body.classList.add('peek');
+    clearTimeout(peekTimer);
+    peekTimer = setTimeout(function(){ document.body.classList.remove('peek'); }, 3500);
+  }
+  if (pill){
+    document.getElementById('storm-peek').addEventListener('click', peek);
+    document.getElementById('storm-x').addEventListener('click', function(){ pillDismissed = true; updatePill(); });
+    document.addEventListener('click', function(e){
+      if (document.body.classList.contains('peek') && !pill.contains(e.target)){ clearTimeout(peekTimer); document.body.classList.remove('peek'); }
+    });
+  }
+  setInterval(function(){
+    if (!pastHero || document.hidden) return;
+    stormSecs = Math.min(STORM_RAMP, stormSecs + 1);
+    var t = stormSecs / STORM_RAMP;
+    storm = t * t * (3 - 2 * t);     // smooth ease in/out
+    paintStormLogo();
+  }, 1000);
+
   // ---- ambient rain / neon-drip canvas ----
   var canvas = document.getElementById('rain-canvas');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (canvas && canvas.getContext && !reduceMotion){
     var ctx = canvas.getContext('2d');
-    var W, H, drops, dpr;
+    var W, H, drops, dpr, baseCount = 18, lastW = 0;
     var COLORS = ['rgba(0,230,255,', 'rgba(255,45,149,', 'rgba(179,75,255,', 'rgba(195,255,61,'];
 
     function resize(){
@@ -1263,42 +1580,95 @@ window.TNR = {
       canvas.style.width = W + 'px';
       canvas.style.height = H + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = Math.max(18, Math.min(46, Math.floor(W / 40)));
-      drops = [];
-      for (var i = 0; i < count; i++){ drops.push(makeDrop(true)); }
+      baseCount = Math.max(32, Math.min(60, Math.floor(W / 28)));
+      if (W !== lastW || !drops){       // iOS fires resize on scroll (address bar); keep the storm going
+        lastW = W; drops = [];
+        for (var i = 0; i < baseCount; i++){ drops.push(makeDrop(true)); }
+      }
     }
+    var wind = 0;                       // horizontal drift per unit fall, grows with the storm
     function makeDrop(initial){
+      var big = 1 + storm * 2.2;        // drops born later in the storm are longer and fatter
+      var spread = Math.abs(wind) * H;
       return {
-        x: Math.random() * W,
-        y: initial ? Math.random() * H : -20 - Math.random() * 80,
-        len: 24 + Math.random() * 46,
-        speed: 90 + Math.random() * 140,
+        x: -spread + Math.random() * (W + spread),
+        y: initial ? Math.random() * H : -20 - Math.random() * 120,
+        len: (24 + Math.random() * 46) * big,
+        speed: (90 + Math.random() * 140) * (1 + storm * 0.8),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        alpha: 0.12 + Math.random() * 0.22,
-        w: 1 + Math.random() * 1.4
+        alpha: 0.28 + Math.random() * 0.32,
+        w: (1 + Math.random() * 1.4) * (1 + storm * 1.6)
       };
     }
+    var splashes = [];
+    var flash = 0, nextFlashCheck = 0;
     var last = null;
     function frame(ts){
       if (last === null) last = ts;
       var dt = Math.min(0.05, (ts - last) / 1000);
       last = ts;
       ctx.clearRect(0, 0, W, H);
+
+      // more, faster, brighter, slanted
+      var target = Math.round(baseCount * (1 + storm * 6));
+      var add = Math.ceil((target - drops.length) * 0.05);
+      for (var k = 0; k < add; k++) drops.push(makeDrop(false));
+      if (drops.length > target) drops.pop();
+      var spd = 1 + storm * 2.2, alp = 1 + storm * 1.1;
+      wind = storm * (0.18 + 0.08 * Math.sin(ts / 2300));   // gusts
+      canvas.style.opacity = (0.85 + storm * 0.15).toFixed(3);
+
       for (var i = 0; i < drops.length; i++){
         var d = drops[i];
-        d.y += d.speed * dt;
-        var grad = ctx.createLinearGradient(d.x, d.y - d.len, d.x, d.y);
+        var fall = d.speed * spd * dt;
+        d.y += fall; d.x += fall * wind;
+        var tx = d.x - d.len * wind, ty = d.y - d.len;
+        var grad = ctx.createLinearGradient(tx, ty, d.x, d.y);
         grad.addColorStop(0, d.color + '0)');
-        grad.addColorStop(1, d.color + d.alpha + ')');
+        grad.addColorStop(0.35, d.color + Math.min(0.95, d.alpha * alp * 0.45).toFixed(3) + ')');
+        grad.addColorStop(1, d.color + Math.min(0.95, d.alpha * alp).toFixed(3) + ')');
         ctx.strokeStyle = grad;
         ctx.lineWidth = d.w;
+        ctx.lineCap = 'round';
         ctx.beginPath();
-        ctx.moveTo(d.x, d.y - d.len);
+        ctx.moveTo(tx, ty);
         ctx.lineTo(d.x, d.y);
         ctx.stroke();
-        if (d.y - d.len > H){
+        if (d.y > H - 4 && !d.hit && storm > 0.2 && Math.random() < 0.35 && splashes.length < 90){
+          d.hit = true;
+          splashes.push({ x: d.x, r: 1, max: 6 + d.w * 4, a: Math.min(0.8, d.alpha * alp), color: d.color });
+        }
+        if (ty > H || d.x < -60 || tx > W + 60){
           drops[i] = makeDrop(false);
         }
+      }
+
+      // splashes along the bottom edge
+      for (var j = splashes.length - 1; j >= 0; j--){
+        var sp = splashes[j];
+        sp.r += 60 * dt; sp.a -= 1.6 * dt;
+        if (sp.a <= 0 || sp.r > sp.max){ splashes.splice(j, 1); continue; }
+        ctx.strokeStyle = sp.color + sp.a.toFixed(3) + ')';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.ellipse(sp.x, H - 3, sp.r * 1.8, sp.r * 0.45, 0, Math.PI, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+      // lightning once it's properly storming
+      if (ts > nextFlashCheck){
+        nextFlashCheck = ts + 1000;
+        if (pastHero && storm > 0.55 && Math.random() < (storm - 0.5) * 0.18){
+          flash = 1;
+          document.body.classList.add('flash');
+          setTimeout(function(){ document.body.classList.remove('flash'); }, 380);
+        }
+      }
+      if (flash > 0){
+        var f = flash > 0.6 ? flash : (flash > 0.35 ? 0.15 : flash * 0.9);   // double flicker
+        ctx.fillStyle = 'rgba(225,235,255,' + (f * 0.28).toFixed(3) + ')';
+        ctx.fillRect(0, 0, W, H);
+        flash -= 2.4 * dt;
       }
       requestAnimationFrame(frame);
     }
