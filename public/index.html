@@ -1,4 +1,18 @@
 <!doctype html><html lang="en"><head><meta charset=utf-8><title>TripN DaRain | The Saga</title><meta name="description" content="Bass music, questionable decisions, and the never-ending TripN DaRain saga."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TripN DaRain">
+<meta property="og:url" content="https://tripndarain.com/">
+<meta property="og:title" content="TripN DaRain | The Saga">
+<meta property="og:description" content="Psytrance, drum &amp; bass, and house from LA. Music, videos, shows, merch, and the never-ending saga.">
+<meta property="og:image" content="https://tripndarain.com/img/og-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TripN DaRain logo with Trip and Rain">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TripN DaRain | The Saga">
+<meta name="twitter:description" content="Psytrance, drum &amp; bass, and house from LA. Music, videos, shows, merch, and the never-ending saga.">
+<meta name="twitter:image" content="https://tripndarain.com/img/og-share.jpg">
+<link rel="icon" href="/img/tnr-mark.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -404,6 +418,117 @@
     filter:drop-shadow(0 2px 0 rgba(75,58,107,.9)) drop-shadow(0 0 14px rgba(160,200,255,.28));
     line-height:1.12; padding-bottom:.08em;
   }
+  /* ===== SHOWS ===== */
+  .show-list{ display:flex; flex-direction:column; gap:.9rem; margin-bottom:2.4rem; }
+  .show-row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:1.3rem; align-items:center;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.1rem 1.3rem;
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  .show-row:hover{ border-color:rgba(195,255,61,.35); box-shadow:0 0 26px rgba(195,255,61,.07); }
+  .show-date{
+    width:4.4rem; text-align:center; border-radius:14px; padding:.55rem .3rem;
+    background:rgba(195,255,61,.1); border:1px solid rgba(195,255,61,.28); line-height:1.1;
+  }
+  .show-date .m{ display:block; font-size:.68rem; font-weight:700; letter-spacing:.12em; color:var(--lime); text-transform:uppercase; }
+  .show-date .d{ display:block; font-family:var(--font-display); font-size:1.7rem; color:var(--text); margin-top:.15rem; }
+  .show-date .y{ display:block; font-size:.64rem; color:var(--text-dim); margin-top:.1rem; }
+  .show-name{ font-family:var(--font-display); font-size:1.12rem; line-height:1.25; }
+  .show-where{ color:var(--text-muted); font-size:.88rem; margin-top:.2rem; }
+  .show-note{ color:var(--text-dim); font-size:.8rem; margin-top:.15rem; }
+  .show-cta{ display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end; }
+  .btn-sm{ padding:.6rem 1.1rem; font-size:.82rem; }
+  .empty-card{
+    border:1px dashed var(--border-strong); border-radius:var(--radius); padding:2rem 1.6rem; text-align:center;
+    color:var(--text-muted); background:rgba(255,255,255,.015);
+  }
+  .empty-card h3{ font-size:1.25rem; color:var(--text); margin-bottom:.45rem; }
+  .empty-card p{ max-width:32rem; margin:0 auto 1.2rem; font-size:.95rem; }
+  .empty-card .btns{ display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; }
+  @media (max-width:640px){
+    .show-row{ grid-template-columns:auto 1fr; }
+    .show-cta{ grid-column:1 / -1; justify-content:flex-start; }
+  }
+
+  /* contact / booking form */
+  .contact-box{
+    background:linear-gradient(160deg, rgba(0,230,255,.07), rgba(179,75,255,.06));
+    border:1px solid rgba(0,230,255,.25); border-radius:24px; padding:2rem 1.6rem;
+  }
+  .contact-box h3{ font-size:1.45rem; margin-bottom:.35rem; }
+  .contact-box > p{ color:var(--text-muted); font-size:.95rem; margin-bottom:1.4rem; max-width:36rem; }
+  .contact-form{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:.8rem; }
+  .contact-form .full{ grid-column:1 / -1; }
+  .contact-form label{ display:block; font-size:.74rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.35rem; }
+  .contact-form input, .contact-form select, .contact-form textarea{
+    width:100%; padding:.8rem 1rem; border-radius:14px; border:1px solid var(--border-strong);
+    background:rgba(0,0,0,.45); color:var(--text); font:inherit; font-size:.92rem; outline:none;
+  }
+  .contact-form select{ appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%); background-position:calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size:5px 5px; background-repeat:no-repeat; }
+  .contact-form textarea{ min-height:7.5rem; resize:vertical; }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus{ border-color:var(--cyan); }
+  .contact-form .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .contact-actions{ display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .contact-status{ font-size:.88rem; color:var(--lime); min-height:1.3rem; }
+  @media (max-width:640px){ .contact-form{ grid-template-columns:1fr; } }
+
+  /* ===== LIVE MEDIA / MERCH / CREW grids ===== */
+  .media-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,250px),1fr)); gap:1.2rem; }
+  .media-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+    display:flex; flex-direction:column; transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  }
+  .media-card:hover{ border-color:rgba(255,45,149,.38); box-shadow:0 0 26px rgba(255,45,149,.1); transform:translateY(-2px); }
+  .media-thumb{ position:relative; aspect-ratio:1/1; background:#000; overflow:hidden; display:block; }
+  .media-thumb.wide{ aspect-ratio:16/9; }
+  .media-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .media-thumb iframe{ width:100%; height:100%; border:0; display:block; }
+  .media-thumb .ph{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:1rem;
+    background:radial-gradient(circle at 30% 20%, rgba(255,45,149,.25), transparent 55%), radial-gradient(circle at 75% 80%, rgba(0,230,255,.22), transparent 55%), #0b0a12;
+    font-family:var(--font-display); font-size:1.3rem; color:var(--text);
+  }
+  .media-kind{
+    position:absolute; left:.6rem; top:.6rem; font-size:.64rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:.22rem .5rem; border-radius:999px; background:rgba(5,5,8,.75); color:var(--text);
+  }
+  .media-body{ padding:1rem 1.1rem 1.2rem; display:flex; flex-direction:column; gap:.35rem; flex:1; }
+  .media-title{ font-family:var(--font-display); font-size:1.02rem; line-height:1.3; }
+  .media-meta{ font-size:.8rem; color:var(--text-dim); }
+  .media-price{ font-weight:700; color:var(--lime); font-size:.95rem; }
+  .media-body .btn{ margin-top:auto; align-self:flex-start; }
+  .section-foot{ display:flex; gap:.7rem; flex-wrap:wrap; margin-top:1.6rem; }
+
+  .crew-card{ padding:1.5rem; gap:.6rem; }
+  .crew-top{ display:flex; align-items:center; gap:.9rem; }
+  .crew-avatar{
+    width:3.4rem; height:3.4rem; border-radius:50%; flex:none; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(140deg, var(--lime), var(--cyan)); color:#07060b; font-family:var(--font-display); font-size:1.2rem;
+  }
+  .crew-avatar img{ width:100%; height:100%; object-fit:cover; }
+  .crew-role{ font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); }
+  .crew-card p{ color:var(--text-muted); font-size:.92rem; }
+  .crew-links{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:auto; padding-top:.4rem; }
+  .crew-links a{
+    font-size:.78rem; font-weight:600; color:var(--text-muted); padding:.35rem .7rem;
+    border:1px solid var(--border); border-radius:999px; transition:all .2s ease;
+  }
+  .crew-links a:hover{ color:var(--cyan); border-color:var(--cyan); }
+  .crew-card.label{ border-color:rgba(195,255,61,.3); }
+
+  /* nav: one scrollable row on small screens */
+  @media (max-width:760px){
+    .nav-inner{ flex-direction:column; align-items:flex-start; gap:.6rem; }
+    .nav-links{ flex-wrap:nowrap; width:100%; overflow-x:auto; scrollbar-width:none; padding-bottom:.2rem; }
+    .nav-links::-webkit-scrollbar{ display:none; }
+    .nav-links a{ white-space:nowrap; }
+  }
+  @media (max-width:640px){
+    #live-grid, #merch-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:.7rem; }
+    #live-grid .media-body, #merch-grid .media-body{ padding:.75rem .8rem .9rem; }
+    #live-grid .empty-card, #merch-grid .empty-card{ grid-column:1 / -1; }
+  }
+  .media-title, .show-name, .empty-card h3, .contact-box h3, .crew-card h3{ font-weight:400 !important; }
 </style>
 
 <canvas id="rain-canvas" aria-hidden="true"></canvas>
@@ -415,9 +540,12 @@
     <ul class="nav-links" id="nav-links">
       <li><a href="#videos" data-nav>Videos</a></li>
       <li><a href="#music" data-nav>Music</a></li>
+      <li><a href="#shows" data-nav>Shows</a></li>
+      <li><a href="#live" data-nav>Live</a></li>
       <li><a href="#saga" data-nav>Saga</a></li>
       <li><a href="#characters" data-nav>Characters</a></li>
-      <li><a href="#history" data-nav>History</a></li>
+      <li><a href="#merch" data-nav>Merch</a></li>
+      <li><a href="#crew" data-nav>Crew</a></li>
       <li><a href="#join" data-nav>Join</a></li>
     </ul>
   </div>
@@ -610,6 +738,54 @@
 
   <div class="divider"></div>
 
+  <!-- SHOWS -->
+  <section class="section" id="shows">
+    <div class="section-head">
+      <div class="section-label">Upcoming Shows</div>
+      <h2 class="section-title">Catch it live</h2>
+      <p class="section-desc">Where the downpour hits next. Grab tickets, or hit us up and we&rsquo;ll sort you out.</p>
+    </div>
+    <div class="show-list" id="show-list"></div>
+
+    <div class="contact-box" id="contact">
+      <h3>Tickets, bookings &amp; merch</h3>
+      <p>Want tickets, want us at your event, or want a shirt before the drop? Send it here and we&rsquo;ll get back to you.</p>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div><label for="c-name">Name</label><input id="c-name" name="name" autocomplete="name" required maxlength="100"></div>
+        <div><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+        <div><label for="c-type">What&rsquo;s it about?</label>
+          <select id="c-type" name="type">
+            <option>Tickets</option><option>Booking</option><option>Merch</option><option>Something else</option>
+          </select></div>
+        <div><label for="c-show">Show / event / item <span style="text-transform:none;letter-spacing:0;font-weight:500">(optional)</span></label><input id="c-show" name="show" maxlength="200"></div>
+        <div class="full"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required maxlength="2000"></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="c-web">Website</label><input id="c-web" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="full contact-actions">
+          <button type="submit" class="btn btn-primary">Send it</button>
+          <span class="contact-status" id="contact-status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- LIVE -->
+  <section class="section" id="live">
+    <div class="section-head">
+      <div class="section-label">Past Shows</div>
+      <h2 class="section-title">Evidence from the field</h2>
+      <p class="section-desc">Photos and footage from the nights that got out of hand.</p>
+    </div>
+    <div class="media-grid" id="live-grid"></div>
+    <div class="section-foot">
+      <a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">More on Instagram</a>
+      <a class="btn btn-ghost btn-sm" href="https://www.youtube.com/@TRIPNDARAIN" target="_blank" rel="noopener">More on YouTube</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- SAGA -->
   <section class="section" id="saga">
     <div class="section-head">
@@ -722,6 +898,30 @@
 
   <div class="divider"></div>
 
+  <!-- MERCH -->
+  <section class="section" id="merch">
+    <div class="section-head">
+      <div class="section-label">Merch</div>
+      <h2 class="section-title">Wear the saga</h2>
+      <p class="section-desc">Shirts and gear from the World Domination Department.</p>
+    </div>
+    <div class="media-grid" id="merch-grid"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CREW -->
+  <section class="section" id="crew">
+    <div class="section-head">
+      <div class="section-label">The Label &amp; The Crew</div>
+      <h2 class="section-title">Check these out</h2>
+      <p class="section-desc">Our record label and the artists we run with.</p>
+    </div>
+    <div class="media-grid" id="crew-grid"></div>
+  </section>
+
+  <div class="divider"></div>
+
   <!-- HISTORY -->
   <section class="section" id="history">
     <div class="section-head">
@@ -764,8 +964,8 @@
       <div class="t-item future">
         <span class="t-dot"></span>
         <div class="t-date">Next <span class="t-status upcoming">Loading</span></div>
-        <div class="t-title">Saga Episode 02 + the first live show</div>
-        <p class="t-desc">Episode 02 is being written. The first live TripN DaRain show hasn't been booked yet &mdash; join the list below and you'll hear it first, before anyone else.</p>
+        <div class="t-title">Saga Episode 02 + more live dates</div>
+        <p class="t-desc">Episode 02 is being written and more shows are loading &mdash; join the list below and you'll hear first, before anyone else.</p>
       </div>
     </div>
   </section>
@@ -798,6 +998,39 @@
   </footer>
 
 </div>
+
+<script>
+/* =====================================================================
+   SITE CONTENT — shows, live media, merch, crew.
+   Add/remove entries here; the sections build themselves.
+   ===================================================================== */
+window.TNR = {
+  // Upcoming shows. date = "YYYY-MM-DD". Shows drop off the list the day after.
+  // ticketUrl: link to buy tickets (leave "" to show a "Request tickets" button instead).
+  shows: [
+    // { date:"2026-11-14", name:"Event name", venue:"Venue", city:"Los Angeles, CA", note:"", ticketUrl:"" },
+  ],
+
+  // Past-show photos & videos.
+  // YouTube:   { type:"youtube", id:"VIDEO_ID", title:"", date:"", place:"" }
+  // Instagram: { type:"instagram", url:"https://www.instagram.com/p/XXXX/", image:"/img/live/xxx.webp", title:"", date:"", place:"" }
+  // Photo:     { type:"photo", image:"/img/live/xxx.webp", url:"", title:"", date:"", place:"" }
+  live: [
+  ],
+
+  // Merch. url = where "Get it" goes (store, Instagram post, etc.). Leave "" to use the order form.
+  merch: [
+    // { name:"TNR Tee", price:"$30", image:"/img/merch/tee.webp", url:"" },
+  ],
+
+  // Label + artists we run with.
+  crew: [
+    { name:"Bass Dreams Records", role:"Our record label", label:true, image:"",
+      blurb:"Music Lives Further. Drum & bass collective and our home label.",
+      links:[ { label:"Instagram", url:"https://www.instagram.com/bassdreams40hz" } ] },
+  ]
+};
+</script>
 
 <script>
 (function(){
@@ -878,6 +1111,137 @@
           else { joinStatus.style.color = 'var(--pink)'; joinStatus.textContent = (res.d && res.d.error) || 'Something glitched. Try again.'; }
         })
         .catch(function(){ joinStatus.style.color = 'var(--pink)'; joinStatus.textContent = 'Something glitched. Try again.'; })
+        .finally(function(){ btn.disabled = false; });
+    });
+  }
+
+  // ---- dynamic sections: shows / live / merch / crew ----
+  var D = window.TNR || {};
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function safeUrl(u){ u = String(u || '').trim(); return /^(https?:\/\/|\/|#|mailto:)/i.test(u) ? u : ''; }
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if (!m) return esc(iso || '');
+    return MONTHS[+m[2]-1] + ' ' + (+m[3]) + ', ' + m[1];
+  }
+  function prefill(type, what){
+    var t = document.getElementById('c-type'), s = document.getElementById('c-show');
+    if (t) t.value = type; if (s) s.value = what || '';
+    var box = document.getElementById('contact'); if (box) box.scrollIntoView({ behavior:'smooth', block:'start' });
+    setTimeout(function(){ var n = document.getElementById('c-name'); if (n) n.focus({ preventScroll:true }); }, 450);
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-request]');
+    if (!b) return; e.preventDefault(); prefill(b.getAttribute('data-request'), b.getAttribute('data-what'));
+  });
+
+  var showList = document.getElementById('show-list');
+  if (showList){
+    var now = new Date(); var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    var up = (D.shows || []).filter(function(s){ return s && s.date >= today; }).sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+    if (!up.length){
+      showList.innerHTML = '<div class="empty-card"><h3>No dates on the board yet</h3><p>New shows get announced here and on Instagram first. Want TripN DaRain at your event?</p>' +
+        '<div class="btns"><a href="#contact" class="btn btn-primary btn-sm" data-request="Booking">Book us</a><a href="#join" class="btn btn-ghost btn-sm">Get show alerts</a></div></div>';
+    } else {
+      showList.innerHTML = up.map(function(s){
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s.date) || [];
+        var tix = safeUrl(s.ticketUrl);
+        var what = (s.name || 'Show') + ' — ' + fmtDate(s.date);
+        return '<article class="show-row">' +
+          '<div class="show-date"><span class="m">' + (MONTHS[+m[2]-1] || '') + '</span><span class="d">' + (+m[3] || '') + '</span><span class="y">' + (m[1] || '') + '</span></div>' +
+          '<div><h3 class="show-name">' + esc(s.name || 'TripN DaRain live') + '</h3>' +
+          '<div class="show-where">' + esc([s.venue, s.city].filter(Boolean).join(' · ')) + '</div>' +
+          (s.note ? '<div class="show-note">' + esc(s.note) + '</div>' : '') + '</div>' +
+          '<div class="show-cta">' + (tix ? '<a class="btn btn-primary btn-sm" href="' + esc(tix) + '" target="_blank" rel="noopener">Get tickets</a>' : '') +
+          '<a class="btn btn-ghost btn-sm" href="#contact" data-request="Tickets" data-what="' + esc(what) + '">' + (tix ? 'Ask us' : 'Request tickets') + '</a></div>' +
+        '</article>';
+      }).join('');
+    }
+  }
+
+  var liveGrid = document.getElementById('live-grid');
+  if (liveGrid){
+    var items = D.live || [];
+    if (!items.length){
+      liveGrid.innerHTML = '<div class="empty-card" style="grid-column:1/-1"><h3>Footage loading&hellip;</h3><p>Photos and videos from past shows land here. Were you there? Tag <strong>@tripndarain</strong> on Instagram.</p>' +
+        '<div class="btns"><a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">Instagram</a></div></div>';
+    } else {
+      liveGrid.innerHTML = items.map(function(it, i){
+        var meta = esc([it.place, it.date ? fmtDate(it.date) : ''].filter(Boolean).join(' · '));
+        var title = esc(it.title || '');
+        var thumb;
+        if (it.type === 'youtube' && /^[\w-]{6,20}$/.test(it.id || '')){
+          thumb = '<button class="media-thumb wide video-frame" data-yt="' + it.id + '" aria-label="Play ' + title + '">' +
+            '<img src="https://i.ytimg.com/vi/' + it.id + '/hqdefault.jpg" alt="" loading="lazy">' +
+            '<span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span><span class="media-kind">Video</span></button>';
+        } else {
+          var link = safeUrl(it.url), img = safeUrl(it.image);
+          var inner = (img ? '<img src="' + esc(img) + '" alt="' + title + '" loading="lazy">' : '<span class="ph">' + (title || 'TripN DaRain live') + '</span>') +
+            '<span class="media-kind">' + (it.type === 'instagram' ? 'Instagram' : 'Photo') + '</span>';
+          thumb = link ? '<a class="media-thumb" href="' + esc(link) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="media-thumb">' + inner + '</div>';
+        }
+        return '<article class="media-card">' + thumb + ((title || meta) ? '<div class="media-body">' + (title ? '<h3 class="media-title">' + title + '</h3>' : '') + (meta ? '<div class="media-meta">' + meta + '</div>' : '') + '</div>' : '') + '</article>';
+      }).join('');
+      liveGrid.querySelectorAll('.video-frame').forEach(function(frame){
+        frame.addEventListener('click', function(){
+          var id = frame.getAttribute('data-yt'); if (!id) return;
+          var f = document.createElement('iframe');
+          f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+          f.title = 'YouTube video player'; f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture'); f.setAttribute('allowfullscreen','');
+          frame.innerHTML = ''; frame.appendChild(f); frame.style.cursor = 'default';
+        }, { once:true });
+      });
+    }
+  }
+
+  var merchGrid = document.getElementById('merch-grid');
+  if (merchGrid){
+    var goods = D.merch || [];
+    if (!goods.length){
+      merchGrid.innerHTML = '<div class="empty-card" style="grid-column:1/-1"><h3>Merch drop incoming</h3><p>Shirts and more are on the way. Follow <strong>@tripndarain</strong> for the drop, or reserve yours now.</p>' +
+        '<div class="btns"><a href="#contact" class="btn btn-primary btn-sm" data-request="Merch">Reserve merch</a><a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">Instagram</a></div></div>';
+    } else {
+      merchGrid.innerHTML = goods.map(function(g){
+        var img = safeUrl(g.image), url = safeUrl(g.url), name = esc(g.name || 'Merch');
+        var btn = url ? '<a class="btn btn-primary btn-sm" href="' + esc(url) + '" target="_blank" rel="noopener">Get it</a>'
+                      : '<a class="btn btn-primary btn-sm" href="#contact" data-request="Merch" data-what="' + name + '">Order</a>';
+        return '<article class="media-card"><div class="media-thumb">' + (img ? '<img src="' + esc(img) + '" alt="' + name + '" loading="lazy">' : '<span class="ph">' + name + '</span>') + '</div>' +
+          '<div class="media-body"><h3 class="media-title">' + name + '</h3>' + (g.price ? '<div class="media-price">' + esc(g.price) + '</div>' : '') + btn + '</div></article>';
+      }).join('');
+    }
+  }
+
+  var crewGrid = document.getElementById('crew-grid');
+  if (crewGrid){
+    crewGrid.innerHTML = (D.crew || []).map(function(c){
+      var img = safeUrl(c.image), name = esc(c.name || '');
+      var initials = (c.name || '?').split(/\s+/).map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
+      var links = (c.links || []).map(function(l){ var u = safeUrl(l.url); return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(l.label || 'Link') + '</a>' : ''; }).join('');
+      return '<article class="media-card crew-card' + (c.label ? ' label' : '') + '"><div class="crew-top"><div class="crew-avatar">' + (img ? '<img src="' + esc(img) + '" alt="">' : esc(initials)) + '</div>' +
+        '<div><div class="crew-role">' + esc(c.role || 'Artist') + '</div><h3 class="media-title">' + name + '</h3></div></div>' +
+        (c.blurb ? '<p>' + esc(c.blurb) + '</p>' : '') + (links ? '<div class="crew-links">' + links + '</div>' : '') + '</article>';
+    }).join('');
+  }
+
+  // ---- contact / tickets / booking form ----
+  var cForm = document.getElementById('contact-form');
+  var cStatus = document.getElementById('contact-status');
+  if (cForm){
+    cForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var f = cForm.elements;
+      var body = { name:f.name.value.trim(), email:f.email.value.trim(), type:f.type.value, show:f.show.value.trim(), message:f.message.value.trim(), website:f.website.value };
+      cStatus.style.color = 'var(--pink)';
+      if (!body.name || !body.email || !body.message){ cStatus.textContent = 'Name, email, and a message, please.'; return; }
+      var btn = cForm.querySelector('button[type=submit]'); btn.disabled = true;
+      cStatus.style.color = ''; cStatus.textContent = 'Transmitting...';
+      fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok:r.ok, d:d }; }); })
+        .then(function(res){
+          if (res.ok){ cStatus.textContent = "Got it. We'll get back to you soon."; cForm.reset(); }
+          else { cStatus.style.color = 'var(--pink)'; cStatus.textContent = (res.d && res.d.error) || 'Something glitched. Try again.'; }
+        })
+        .catch(function(){ cStatus.style.color = 'var(--pink)'; cStatus.textContent = 'Something glitched. Try again.'; })
         .finally(function(){ btn.disabled = false; });
     });
   }
