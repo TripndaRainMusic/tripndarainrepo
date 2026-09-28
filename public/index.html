@@ -78,8 +78,8 @@
   .storm-logo{
     position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; contain:strict;
     display:flex; align-items:center; justify-content:center;
-    opacity:0; filter:blur(10px);
-    transition:opacity 1.8s ease, filter 1.8s ease;
+    opacity:0; will-change:opacity;
+    transition:opacity 1.8s ease;
   }
   .storm-logo img{
     width:min(74vw, 520px); max-height:78vh; height:auto; object-fit:contain;
@@ -1604,13 +1604,14 @@ window.TNR = {
       paintStormLogo();
     }, { threshold: 0 }).observe(heroEl);
   }
-  var rootStyle = document.documentElement.style;
+  var rootStyle = document.documentElement.style, lastSurface = null;
   function paintStormLogo(){
     if (!stormLogo) return;
-    stormLogo.style.opacity = pastHero ? (0.10 + storm * 0.40).toFixed(3) : '0';
-    stormLogo.style.filter = 'blur(' + (8 - storm * 7.5).toFixed(1) + 'px)';
-    // cards turn to glass as the storm builds so the logo shows through them
-    var a = pastHero ? (0.94 - storm * 0.36) : 0.97;
+    stormLogo.style.opacity = pastHero ? (0.38 + storm * 0.27).toFixed(2) : '0';
+    // cards turn to glass as the storm builds so the logo shows through them (stepped to avoid constant repaints)
+    var a = pastHero ? (0.94 - Math.round(storm * 6) / 6 * 0.36) : 0.97;
+    if (a === lastSurface) { updatePill(); return; }
+    lastSurface = a;
     rootStyle.setProperty('--surface', 'rgba(18,16,25,' + a.toFixed(3) + ')');
     rootStyle.setProperty('--surface-2', 'rgba(23,21,31,' + a.toFixed(3) + ')');
     rootStyle.setProperty('--bg-elevated', 'rgba(11,11,18,' + a.toFixed(3) + ')');
@@ -1648,13 +1649,20 @@ window.TNR = {
   }
   // rain runs on its own faster clock from the moment the page loads:
   // steady rain right away, full downpour in about a minute (logo + lightning keep the slower clock)
-  var RAIN_START = 0.28, RAIN_RAMP = 60, rainSecs = 0;
+  // steady visible rain right away, builds to a downpour over ~90s,
+  // then cycles: eases back to normal rain, builds up again, repeat
+  var RAIN_START = 0.45, RAIN_RAMP = 90, WAVE = 100, rainSecs = 0;
   var rain = RAIN_START;
   setInterval(function(){
     if (document.hidden) return;
-    rainSecs = Math.min(RAIN_RAMP, rainSecs + 1);
-    var t = rainSecs / RAIN_RAMP;
-    rain = RAIN_START + (1 - RAIN_START) * (t * t * (3 - 2 * t));
+    rainSecs++;
+    if (rainSecs <= RAIN_RAMP){
+      var t = rainSecs / RAIN_RAMP;
+      rain = RAIN_START + (1 - RAIN_START) * (t * t * (3 - 2 * t));
+    } else {
+      var p = (rainSecs - RAIN_RAMP) / WAVE;           // 0 at peak
+      rain = RAIN_START + (1 - RAIN_START) * (0.5 + 0.5 * Math.cos(p * 2 * Math.PI));
+    }
   }, 1000);
   setInterval(function(){
     if (!pastHero || document.hidden) return;
@@ -1672,8 +1680,12 @@ window.TNR = {
     var W, H, drops, dpr, baseCount = 18, lastW = 0;
     var COLORS = ['rgba(0,230,255,', 'rgba(255,45,149,', 'rgba(179,75,255,', 'rgba(195,255,61,'];
 
+    var lastH = 0;
     function resize(){
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // phones fire resize while scrolling (address bar); re-sizing the canvas wipes it = whole-background glitch
+      if (window.innerWidth === lastW && drops && Math.abs(window.innerHeight - lastH) < 160) return;
+      lastH = Math.max(window.innerHeight, (window.screen && screen.height) || 0);
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W * dpr;
@@ -1701,6 +1713,16 @@ window.TNR = {
         w: (1 + Math.random() * 1.4) * (1 + rain * 1.6)
       };
     }
+    // pre-rendered streak sprite per colour (fast drawImage instead of a gradient per drop per frame)
+    var SPR = {};
+    COLORS.forEach(function(c){
+      var sc = document.createElement('canvas'); sc.width = 8; sc.height = 128;
+      var g = sc.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 128);
+      gr.addColorStop(0, c + '0)'); gr.addColorStop(0.35, c + '0.45)'); gr.addColorStop(1, c + '1)');
+      g.fillStyle = gr; g.fillRect(2, 0, 4, 128);
+      SPR[c] = sc;
+    });
+    var lastOp = -1;
     var splashes = [];
     var flash = 0, nextFlashCheck = 0;
     var last = null;
@@ -1711,39 +1733,35 @@ window.TNR = {
       ctx.clearRect(0, 0, W, H);
 
       // more, faster, brighter, slanted
-      var target = Math.round(baseCount * (1 + rain * 6));
+      var target = Math.min(W < 700 ? 140 : 230, Math.round(baseCount * (1 + rain * 3.5)));
       var add = Math.ceil((target - drops.length) * 0.05);
       for (var k = 0; k < add; k++) drops.push(makeDrop(false));
-      if (drops.length > target) drops.pop();
+      var extra = drops.length - target;   // let extra drops finish falling instead of vanishing
       var spd = 1 + rain * 2.2, alp = 1 + rain * 1.1;
       wind = rain * (0.18 + 0.08 * Math.sin(ts / 2300));   // gusts
-      canvas.style.opacity = (0.85 + rain * 0.15).toFixed(3);
+      var op = Math.round((0.85 + rain * 0.15) * 50) / 50;
+      if (op !== lastOp){ lastOp = op; canvas.style.opacity = op; }
+      ctx.setTransform(dpr, 0, wind * dpr, dpr, 0, 0);   // shear = slant for every drop at once
 
       for (var i = 0; i < drops.length; i++){
         var d = drops[i];
         var fall = d.speed * spd * dt;
         d.y += fall; d.x += fall * wind;
         var tx = d.x - d.len * wind, ty = d.y - d.len;
-        var grad = ctx.createLinearGradient(tx, ty, d.x, d.y);
-        grad.addColorStop(0, d.color + '0)');
-        grad.addColorStop(0.35, d.color + Math.min(0.95, d.alpha * alp * 0.45).toFixed(3) + ')');
-        grad.addColorStop(1, d.color + Math.min(0.95, d.alpha * alp).toFixed(3) + ')');
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = d.w;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(tx, ty);
-        ctx.lineTo(d.x, d.y);
-        ctx.stroke();
+        ctx.globalAlpha = Math.min(0.95, d.alpha * alp);
+        ctx.drawImage(SPR[d.color], d.x - wind * d.y - d.w, d.y - d.len, d.w * 2, d.len);
         if (d.y > H - 4 && !d.hit && rain > 0.15 && Math.random() < 0.35 && splashes.length < 90){
           d.hit = true;
           splashes.push({ x: d.x, r: 1, max: 6 + d.w * 4, a: Math.min(0.8, d.alpha * alp), color: d.color });
         }
         if (ty > H || d.x < -60 || tx > W + 60){
+          if (extra > 0){ drops.splice(i, 1); i--; extra--; continue; }
           drops[i] = makeDrop(false);
         }
       }
 
+      ctx.globalAlpha = 1;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       // splashes along the bottom edge
       for (var j = splashes.length - 1; j >= 0; j--){
         var sp = splashes[j];
