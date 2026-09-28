@@ -1,0 +1,1783 @@
+<!doctype html><html lang="en"><head><meta charset=utf-8><title>TripN DaRain | The Saga</title><meta name="description" content="Bass music, questionable decisions, and the never-ending TripN DaRain saga."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TripN DaRain">
+<meta property="og:url" content="https://tripndarain.com/">
+<meta property="og:title" content="TripN DaRain | The Saga">
+<meta property="og:description" content="Psytrance, drum &amp; bass, and house from LA. Music, videos, shows, merch, and the never-ending saga.">
+<meta property="og:image" content="https://tripndarain.com/img/og-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TripN DaRain logo with Trip and Rain">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TripN DaRain | The Saga">
+<meta name="twitter:description" content="Psytrance, drum &amp; bass, and house from LA. Music, videos, shows, merch, and the never-ending saga.">
+<meta name="twitter:image" content="https://tripndarain.com/img/og-share.jpg">
+<link rel="icon" href="/img/tnr-mark.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050507;
+    --bg-elevated:#0b0b12;
+    --surface:#121019;
+    --surface-2:#17151f;
+    --border:rgba(255,255,255,.09);
+    --border-strong:rgba(255,255,255,.16);
+    --text:#f4f2f8;
+    --text-muted:#9c98ac;
+    --text-dim:#726e82;
+    --pink:#ff2d95;
+    --cyan:#00e6ff;
+    --lime:#c3ff3d;
+    --purple:#b34bff;
+    --font-display:'Shrikhand','Space Grotesk',system-ui,-apple-system,sans-serif;
+    --font-body:'Inter',system-ui,-apple-system,sans-serif;
+    --max:1180px;
+    --radius:20px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    margin:0;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px));
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  h1,h2,h3{ font-family:var(--font-display); text-wrap:balance; margin:0; }
+  p{ margin:0; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; margin:0; padding:0; }
+  button{ font-family:inherit; }
+
+  /* ambient bg canvas */
+  #rain-canvas{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; pointer-events:none; opacity:.55;
+  }
+  .bg-glow{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 45% at 18% -8%, rgba(0,230,255,.10), transparent 60%),
+      radial-gradient(ellipse 60% 42% at 88% 8%, rgba(255,45,149,.08), transparent 60%),
+      radial-gradient(ellipse 55% 40% at 50% 100%, rgba(179,75,255,.07), transparent 60%);
+  }
+
+  /* storm logo: fades in behind content once you leave the hero, clearer the longer you stay */
+  .storm-logo{
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; contain:strict;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; filter:blur(10px);
+    transition:opacity 1.8s ease, filter 1.8s ease;
+  }
+  .storm-logo img{
+    width:min(74vw, 520px); max-height:78vh; height:auto; object-fit:contain;
+    filter:drop-shadow(0 0 40px rgba(0,230,255,.18)) drop-shadow(0 0 70px rgba(255,45,149,.12));
+  }
+  .hero{ overflow-x:clip; }
+  .wrap{ max-width:var(--max); margin:0 auto; position:relative; z-index:1; transition:opacity .9s ease; }
+  .nav{ transition:opacity .9s ease; }
+  .storm-logo img{ transition:filter .9s ease; }
+
+  /* "peek behind the rain": fade the page away so the logo takes over */
+  body.peek .wrap, body.peek .nav{ opacity:0; pointer-events:none; }
+  body.flash .storm-logo img{ filter:brightness(2.3) drop-shadow(0 0 60px rgba(200,230,255,.6)); transition:filter .05s; }
+  body.peek .storm-logo{ opacity:.95 !important; filter:blur(0) !important; }
+  body.peek .storm-logo img{ filter:drop-shadow(0 0 50px rgba(0,230,255,.35)) drop-shadow(0 0 90px rgba(255,45,149,.3)); }
+
+  /* weather report pill */
+  .storm-pill{
+    position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:60;
+    transform:translate(-50%, 140%); opacity:0; transition:transform .6s cubic-bezier(.2,.9,.3,1.2), opacity .4s ease;
+    display:flex; align-items:center; gap:.55rem; max-width:calc(100vw - 24px);
+    padding:.5rem .5rem .5rem .95rem; border-radius:999px;
+    background:rgba(11,11,18,.88); border:1px solid rgba(0,230,255,.35);
+    box-shadow:0 0 22px rgba(0,230,255,.18), 0 8px 30px rgba(0,0,0,.5);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    font:600 .82rem/1.25 var(--font-body); color:var(--text);
+  }
+  .storm-pill:not(.show){ visibility:hidden; transition:transform .6s ease, opacity .4s ease, visibility 0s .6s; }
+  .storm-pill.show{ transform:translate(-50%, 0); opacity:1; }
+  .storm-pill .sp-text{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .storm-pill button{
+    border:0; cursor:pointer; font:inherit; border-radius:999px;
+  }
+  .storm-pill .sp-peek{
+    flex:none; padding:.45rem .85rem; color:#050507;
+    background:linear-gradient(120deg, var(--cyan), var(--pink)); font-weight:700;
+    animation:peekpulse 2.2s ease-in-out infinite;
+  }
+  .storm-pill .sp-x{ flex:none; width:28px; height:28px; background:transparent; color:var(--text-dim); font-size:1rem; }
+  .storm-pill .sp-x:hover{ color:var(--text); }
+  @keyframes peekpulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,45,149,.55);} 50%{ box-shadow:0 0 0 7px rgba(255,45,149,0);} }
+  @media (prefers-reduced-motion: reduce){ .storm-pill .sp-peek{ animation:none; } }
+
+  /* ===== NAV ===== */
+  .nav{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding:1rem 0;
+    margin:0 auto;
+    max-width:var(--max);
+    background:rgba(5,5,7,.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  .nav-inner{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    border-bottom:1px solid var(--border); padding-bottom:1rem;
+  }
+  .nav-logo{ font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:.01em; white-space:nowrap; }
+  .nav-logo span{ color:var(--pink); }
+  .nav-links{ display:flex; gap:1.5rem; flex-wrap:wrap; overflow-x:auto; }
+  .nav-links a{
+    font-size:.82rem; font-weight:600; letter-spacing:.03em; text-transform:uppercase;
+    color:var(--text-dim); white-space:nowrap; padding:.3rem 0; border-bottom:2px solid transparent;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .nav-links a:hover{ color:var(--text); }
+  .nav-links a.active{ color:var(--cyan); border-color:var(--cyan); }
+
+  /* ===== HERO ===== */
+  .hero{ padding:4.5rem 0 5rem; text-align:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.5rem;
+    font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--lime); margin-bottom:1.25rem;
+  }
+  .eyebrow::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--lime); box-shadow:0 0 10px var(--lime); }
+  /* ---- globe / ring / laser hero mark ---- */
+  .globe-wrap{
+    position:relative; width:min(540px, 96vw); aspect-ratio:1; margin:-.75rem auto 1.4rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .laser{
+    position:absolute; top:50%; left:50%; width:2px; height:150%;
+    background:linear-gradient(to bottom, transparent, currentColor 45%, transparent 85%);
+    transform-origin:top center; mix-blend-mode:screen; opacity:.55; filter:blur(.5px);
+  }
+  .laser-a{ color:var(--cyan); animation:sweepA 5.5s ease-in-out infinite; }
+  .laser-b{ color:var(--pink); animation:sweepB 7s ease-in-out infinite; }
+  .laser-c{ color:var(--lime); animation:sweepC 4.4s ease-in-out infinite; }
+  @keyframes sweepA{ 0%,100%{ transform:translate(-50%,-10%) rotate(6deg);} 50%{ transform:translate(-50%,-10%) rotate(38deg);} }
+  @keyframes sweepB{ 0%,100%{ transform:translate(-50%,-10%) rotate(-10deg);} 50%{ transform:translate(-50%,-10%) rotate(-42deg);} }
+  @keyframes sweepC{ 0%,100%{ transform:translate(-50%,-10%) rotate(-2deg);} 50%{ transform:translate(-50%,-10%) rotate(20deg);} }
+  .ring{ position:absolute; border-radius:50%; pointer-events:none; }
+  .ring-a{ inset:2%; border:1px dashed rgba(0,230,255,.32); animation:spin 16s linear infinite; }
+  .ring-b{ inset:9%; border:1px solid rgba(255,45,149,.22); animation:spin-rev 22s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes spin-rev{ to{ transform:rotate(-360deg); } }
+  .ring-text{ position:absolute; inset:12%; width:76%; height:76%; overflow:visible; animation:spin 26s linear infinite; }
+  .ring-text text{
+    fill:var(--text-muted); font-family:var(--font-display); font-weight:600;
+    font-size:9.5px; letter-spacing:2.5px; text-transform:uppercase;
+  }
+  .globe{
+    position:relative; width:55%; height:55%; border-radius:50%; overflow:hidden;
+    border:1px solid rgba(255,255,255,.14);
+    background:
+      radial-gradient(circle at 30% 26%, rgba(255,255,255,.16), rgba(255,255,255,0) 40%),
+      radial-gradient(circle at 70% 80%, rgba(0,230,255,.2), transparent 55%),
+      radial-gradient(circle at 50% 50%, #1a1622, #050507 72%);
+    box-shadow:
+      inset 0 0 44px rgba(0,0,0,.65),
+      0 0 50px rgba(255,45,149,.28),
+      0 0 90px rgba(0,230,255,.16);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .globe-lcd{
+    position:absolute; inset:0; opacity:.16; mix-blend-mode:overlay;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.55) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.3) 0 1px, transparent 1px 3px);
+    animation:lcdshift 7s linear infinite;
+  }
+  @keyframes lcdshift{ 0%{ transform:translateY(0); } 100%{ transform:translateY(6px); } }
+  .globe-word{
+    position:relative; z-index:2; display:flex; flex-direction:column; align-items:center;
+    font-family:var(--font-display); font-weight:700; line-height:.98; text-align:center;
+    font-size:clamp(1.8rem, 9.4vw, 3.1rem); letter-spacing:-.01em;
+    background:linear-gradient(120deg, var(--cyan), var(--pink), var(--purple), var(--lime), var(--cyan));
+    background-size:320% 320%; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:colorshift 7s ease infinite;
+    filter:drop-shadow(0 0 16px rgba(255,45,149,.4));
+  }
+  @keyframes colorshift{ 0%,100%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } }
+  @media (prefers-reduced-motion: reduce){
+    .laser-a, .laser-b, .laser-c, .ring-a, .ring-b, .ring-text, .globe-lcd, .globe-word{ animation:none; }
+  }
+  /* ---- the easy button (hero logo = play) ---- */
+  button.globe{
+    appearance:none; -webkit-appearance:none; padding:0; margin:0; font:inherit; color:inherit;
+    cursor:pointer; z-index:2; -webkit-tap-highlight-color:transparent;
+    transition:transform .12s ease, box-shadow .3s ease;
+  }
+  button.globe:hover{ transform:scale(1.03); }
+  button.globe:active{ transform:scale(.93); }
+  button.globe:focus-visible{ outline:2px solid var(--cyan); outline-offset:6px; }
+  .easy-icon{
+    position:absolute; left:50%; bottom:12%; width:clamp(22px, 6.5vw, 30px); height:clamp(22px, 6.5vw, 30px); transform:translateX(-50%);
+    z-index:2; fill:var(--text); opacity:.8; filter:drop-shadow(0 0 6px rgba(0,230,255,.7));
+  }
+  .easy-icon .i-pause{ display:none; }
+  .globe.playing .easy-icon .i-play{ display:none; }
+  .globe.playing .easy-icon .i-pause{ display:inline; }
+  /* while music plays, JS sets --lvl (0..1) from the track's real loudness curve */
+  .globe-wrap{ --lvl:0; }
+  .globe-wrap.reactive .globe{
+    transform:scale(calc(1 + var(--lvl) * .07));
+    box-shadow:
+      inset 0 0 44px rgba(0,0,0,.65),
+      0 0 calc(40px + var(--lvl) * 70px) rgba(255,45,149,calc(.25 + var(--lvl) * .45)),
+      0 0 calc(80px + var(--lvl) * 110px) rgba(0,230,255,calc(.12 + var(--lvl) * .35));
+    transition:none;
+  }
+  .globe-wrap.reactive .globe-word{ filter:drop-shadow(0 0 calc(10px + var(--lvl) * 22px) rgba(255,45,149,calc(.35 + var(--lvl) * .5))) brightness(calc(1 + var(--lvl) * .35)); }
+  .globe-wrap.reactive .laser{ opacity:calc(.3 + var(--lvl) * .7); }
+  .globe-wrap.reactive .ring-a, .globe-wrap.reactive .ring-b{ opacity:calc(.6 + var(--lvl) * .8); }
+  .globe-wrap.reactive .ring-text{ filter:drop-shadow(0 0 calc(3px + var(--lvl) * 8px) rgba(164,246,255,calc(.45 + var(--lvl) * .5))); }
+  @keyframes beat{
+    0%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 80px rgba(255,45,149,.55), 0 0 140px rgba(0,230,255,.35); }
+    100%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 40px rgba(255,45,149,.2), 0 0 80px rgba(0,230,255,.1); }
+  }
+  .globe.bonk{ animation:bonk .35s ease; }
+  @keyframes bonk{ 0%{ transform:scale(.9);} 60%{ transform:scale(1.06);} 100%{ transform:scale(1);} }
+  .easy-bubble{
+    position:absolute; top:4%; right:-2%; z-index:3; pointer-events:none;
+    max-width:9.5rem; padding:.55rem .8rem; border-radius:16px 16px 16px 4px;
+    background:var(--text); color:#050507; text-align:left;
+    font:700 .82rem/1.2 var(--font-body);
+    box-shadow:0 0 22px rgba(255,45,149,.35), 0 6px 18px rgba(0,0,0,.5);
+    transform-origin:0% 100%; animation:bubblebob 2.6s ease-in-out infinite;
+  }
+  .easy-bubble::after{
+    content:""; position:absolute; left:-4px; bottom:-9px; width:18px; height:14px;
+    background:var(--text); clip-path:polygon(30% 0, 100% 0, 0 100%);
+  }
+  .easy-bubble.asking{ pointer-events:auto; max-width:11rem; }
+  .easy-bubble{ transition:opacity .45s ease, visibility .45s; }
+  .easy-bubble.gone{ opacity:0; visibility:hidden; pointer-events:none; }
+  .eb-btns{ display:flex; gap:.35rem; margin-top:.45rem; }
+  .eb-btns button{
+    border:0; cursor:pointer; border-radius:999px; padding:.38rem .65rem;
+    font:700 .76rem/1 var(--font-body);
+  }
+  .eb-yes{ background:linear-gradient(120deg, var(--cyan), var(--pink)); color:#050507; }
+  .eb-no{ background:rgba(5,5,7,.1); color:#050507; }
+  .easy-bubble.pop{ animation:bubblepop .35s cubic-bezier(.2,.9,.3,1.5); }
+  @keyframes bubblebob{ 0%,100%{ transform:translateY(0) rotate(-2deg);} 50%{ transform:translateY(-5px) rotate(1deg);} }
+  @keyframes bubblepop{ 0%{ transform:scale(.6);} 100%{ transform:scale(1);} }
+  @media (max-width:640px){ .easy-bubble{ right:7%; top:1%; font-size:.78rem; max-width:8.5rem; } .easy-bubble.asking{ max-width:10.5rem; } }
+  @media (prefers-reduced-motion: reduce){ .easy-bubble{ animation:none; } .globe-wrap.reactive .globe{ transform:none; } }
+  /* SoundCloud mini-player dock: stays hidden while the logo drives playback, slides up if a tap is needed */
+  .sc-dock{
+    position:fixed; left:50%; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:70;
+    width:min(480px, calc(100vw - 24px)); padding:.55rem .55rem .6rem; border-radius:18px;
+    background:rgba(11,11,18,.96); border:1px solid rgba(255,45,149,.4);
+    box-shadow:0 0 26px rgba(255,45,149,.25), 0 10px 34px rgba(0,0,0,.6);
+    transform:translate(-50%, calc(100% + 40px)); opacity:0; pointer-events:none;
+    transition:transform .5s cubic-bezier(.2,.9,.3,1.1), opacity .35s ease;
+  }
+  .sc-dock{ overflow:hidden; contain:layout paint; }
+  .sc-dock:not(.open){ visibility:hidden; transition:transform .5s cubic-bezier(.2,.9,.3,1.1), opacity .35s ease, visibility 0s .5s; }
+  .sc-dock.open{ transform:translate(-50%, 0); opacity:1; pointer-events:auto; }
+  .sc-dock-head{ display:flex; align-items:center; gap:.5rem; padding:0 .2rem .45rem .35rem; }
+  .sc-now{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font:600 .8rem/1.2 var(--font-body); color:var(--text); }
+  .sc-close{ flex:none; width:28px; height:28px; border:0; border-radius:50%; background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; }
+  .sc-dock iframe{ display:block; width:1px; min-width:100%; max-width:100%; height:166px; border:0; border-radius:12px; }
+  .storm-pill .sp-pause{ flex:none; width:32px; height:32px; background:rgba(255,255,255,.08); color:var(--text); }
+  .logo-mark-small{ width:34px; height:auto; opacity:.85; border-radius:6px; margin:0 auto .75rem; }
+
+  /* ---- ticker ---- */
+  .ticker{
+    border-block:1px solid var(--border); overflow:hidden; white-space:nowrap;
+    background:var(--bg-elevated); position:relative; z-index:1;
+  }
+  .ticker-track{ display:flex; width:max-content; animation:ticker 26s linear infinite; will-change:transform; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
+  .ticker-track span{
+    font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:.03em;
+    color:var(--text-dim); padding:.85rem 0; flex:none; line-height:1.4;
+  }
+  @keyframes ticker{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-50%,0,0); } }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; overflow-x:auto; } }
+  .hero h1{
+    font-size:clamp(2.1rem, 7vw, 3.6rem); font-weight:700; letter-spacing:-.02em; line-height:1.03;
+    margin-bottom:1.4rem;
+  }
+  .hero-sub{
+    max-width:38rem; margin:0 auto 1rem; color:var(--text-muted); font-size:1.08rem;
+  }
+  .hero-tags{
+    color:var(--text-dim); font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; margin-bottom:2.25rem;
+  }
+  .hero-actions{ display:flex; gap:.9rem; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:.5rem; justify-content:center;
+    padding:.85rem 1.6rem; font-size:.92rem; font-weight:700; border-radius:999px; border:none;
+    cursor:pointer; transition:all .2s ease; font-family:var(--font-body);
+  }
+  .btn-primary{ background:var(--lime); color:#0a0a08; }
+  .btn-primary:hover{ box-shadow:0 0 30px rgba(195,255,61,.4); transform:translateY(-1px); }
+  .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--border-strong); }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 20px rgba(0,230,255,.18); }
+  .btn:focus-visible, a:focus-visible, button:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+
+  /* ===== SECTION shared ===== */
+  .section{ padding:4.5rem 0; position:relative; }
+  .section-head{ margin-bottom:2.75rem; max-width:40rem; }
+  .section-label{ font-size:.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); margin-bottom:.6rem; }
+  .section-title{ font-size:clamp(1.7rem, 4vw, 2.5rem); font-weight:700; letter-spacing:-.02em; margin-bottom:.6rem; }
+  .section-desc{ color:var(--text-muted); font-size:1.02rem; max-width:34rem; }
+  .divider{ height:1px; background:var(--border); }
+
+  /* ===== VIDEO GRID ===== */
+  .video-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,280px),1fr)); gap:1.4rem; }
+  .video-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    overflow:hidden; display:flex; flex-direction:column;
+  }
+  .video-frame{
+    position:relative; aspect-ratio:16/9; background:#000; cursor:pointer; overflow:hidden;
+  }
+  .video-frame img{ width:100%; height:100%; object-fit:cover; opacity:.82; transition:opacity .2s ease, transform .4s ease; }
+  .video-frame:hover img{ opacity:1; transform:scale(1.03); }
+  .video-frame iframe{ width:100%; height:100%; border:0; display:block; }
+  .play-badge{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  }
+  .play-badge span{
+    width:58px; height:58px; border-radius:50%; background:rgba(5,5,8,.55); backdrop-filter:blur(3px);
+    border:1px solid rgba(255,255,255,.35);
+    display:flex; align-items:center; justify-content:center; transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .video-frame:hover .play-badge span{ transform:scale(1.08); box-shadow:0 0 24px rgba(0,230,255,.4); }
+  .play-badge svg{ width:20px; height:20px; fill:#fff; margin-left:3px; }
+  .video-len{
+    position:absolute; right:.55rem; bottom:.55rem; background:rgba(5,5,8,.75);
+    font-size:.72rem; font-weight:600; padding:.2rem .5rem; border-radius:5px; letter-spacing:.02em;
+  }
+  .video-body{ padding:1.1rem 1.2rem 1.3rem; display:flex; flex-direction:column; gap:.55rem; flex:1; }
+  .video-tag{
+    align-self:flex-start; font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:.24rem .55rem; border-radius:999px; background:rgba(255,45,149,.14); color:var(--pink);
+  }
+  .video-title{ font-family:var(--font-display); font-weight:700; font-size:1.02rem; line-height:1.3; }
+  .video-meta{ font-size:.8rem; color:var(--text-dim); display:flex; gap:.6rem; flex-wrap:wrap; }
+  .video-link{
+    margin-top:auto; font-size:.78rem; font-weight:600; color:var(--text-muted); display:inline-flex; align-items:center; gap:.35rem;
+    padding-top:.3rem; transition:color .2s ease;
+  }
+  .video-link:hover{ color:var(--cyan); }
+
+  /* ===== TRACK GRID ===== */
+  .track-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,250px),1fr)); gap:1.3rem; }
+  .track-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:1.6rem; display:flex; flex-direction:column; gap:.9rem;
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  .track-card:hover{ border-color:rgba(0,230,255,.35); box-shadow:0 0 26px rgba(0,230,255,.08); }
+  .track-card.featured{ border-color:rgba(255,45,149,.35); }
+  .track-card.featured:hover{ box-shadow:0 0 26px rgba(255,45,149,.12); }
+  .track-tag{ align-self:flex-start; font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:.24rem .55rem; border-radius:999px; }
+  .tag-newest{ background:rgba(195,255,61,.15); color:var(--lime); }
+  .tag-most{ background:rgba(255,45,149,.15); color:var(--pink); }
+  .tag-fav{ background:rgba(0,230,255,.15); color:var(--cyan); }
+  .track-title{ font-family:var(--font-display); font-weight:700; font-size:1.12rem; line-height:1.3; }
+  .track-genre{ font-size:.82rem; color:var(--text-dim); margin-top:-.5rem; }
+  .track-links{ display:flex; gap:.6rem; flex-wrap:wrap; margin-top:auto; }
+  .track-links a{
+    font-size:.78rem; font-weight:600; color:var(--text-muted); padding:.35rem .7rem;
+    border:1px solid var(--border); border-radius:999px; transition:all .2s ease;
+  }
+  .track-links a:hover{ color:var(--cyan); border-color:var(--cyan); }
+
+  /* ===== SAGA ===== */
+  .saga-ep{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:24px;
+    padding:2.4rem; display:grid; grid-template-columns:1.1fr .9fr; gap:2.5rem; align-items:center; margin-bottom:1.3rem;
+  }
+  .saga-ep-label{ font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); margin-bottom:.6rem; }
+  .saga-ep h3{ font-size:1.7rem; font-weight:700; margin-bottom:.85rem; }
+  .saga-ep p{ color:var(--text-muted); }
+  .saga-art{
+    aspect-ratio:1; border-radius:18px; border:1px solid var(--border);
+    background:linear-gradient(150deg, var(--surface-2), var(--bg-elevated));
+    display:flex; align-items:center; justify-content:center; padding:1.5rem;
+    align-self:start; overflow:hidden;
+  }
+  .saga-art img{ max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; margin:0 auto; filter:drop-shadow(0 12px 30px rgba(0,0,0,.5)); }
+  .saga-locked-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,260px),1fr)); gap:1.1rem; margin-top:1.3rem; }
+  .saga-locked{
+    background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:1.6rem;
+  }
+  .saga-locked.ep2{ opacity:.78; }
+  .saga-locked.ep3{ opacity:.55; }
+  .saga-locked h4{ font-family:var(--font-display); font-size:1.15rem; font-weight:700; margin-bottom:.5rem; }
+  .saga-locked p{ color:var(--text-muted); font-size:.9rem; }
+
+  .transmissions{ margin-top:2.5rem; }
+  .transmission{
+    border:1px solid var(--border); border-radius:16px; margin-bottom:.85rem; overflow:hidden; background:var(--surface);
+  }
+  .transmission-head{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    padding:1.1rem 1.4rem; background:transparent; border:none; color:var(--text); cursor:pointer; text-align:left;
+  }
+  .transmission-head:hover{ background:rgba(255,255,255,.02); }
+  .transmission-title{ display:flex; flex-direction:column; gap:.25rem; }
+  .transmission-eyebrow{ font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--purple); }
+  .transmission-name{ font-family:var(--font-display); font-weight:700; font-size:1.05rem; }
+  .transmission-icon{ flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--border-strong); display:flex; align-items:center; justify-content:center; transition:transform .25s ease; }
+  .transmission[open] .transmission-icon{ transform:rotate(45deg); }
+  .transmission-body{ padding:0 1.4rem 1.4rem; color:var(--text-muted); font-size:.94rem; }
+  .transmission-body p + p{ margin-top:.75rem; }
+  .transmission-body em{ color:var(--text); font-style:normal; font-weight:600; }
+
+  /* ===== CHARACTERS ===== */
+  .char-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,320px),1fr)); gap:1.6rem; }
+  .char-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:26px; padding:2rem;
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+  }
+  .char-stage{
+    width:100%; max-width:230px; aspect-ratio:3/4; border-radius:20px; margin-bottom:1.1rem;
+    background:radial-gradient(ellipse at 50% 30%, rgba(255,255,255,.05), transparent 65%), linear-gradient(160deg, var(--surface-2), #0a0a0f);
+    border:1px solid var(--border);
+    display:flex; align-items:flex-end; justify-content:center; overflow:hidden; position:relative;
+  }
+  .char-stage img{ max-height:96%; width:auto; transition:transform .35s ease; }
+  .char-card:hover .char-stage img{ transform:translateY(-4px); }
+  .char-poses{ display:flex; gap:.5rem; justify-content:center; margin-bottom:1.3rem; flex-wrap:wrap; }
+  .pose-dot{
+    width:34px; height:34px; border-radius:9px; border:1px solid var(--border); background:var(--bg-elevated);
+    cursor:pointer; overflow:hidden; padding:0; opacity:.55; transition:all .2s ease;
+  }
+  .pose-dot img{ width:100%; height:100%; object-fit:cover; }
+  .pose-dot:hover{ opacity:.85; }
+  .pose-dot.active{ opacity:1; border-color:var(--cyan); box-shadow:0 0 0 1px var(--cyan); }
+  .char-name{ font-family:var(--font-display); font-size:1.55rem; font-weight:700; margin-bottom:.3rem; }
+  .char-role{ font-size:.82rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--cyan); margin-bottom:1rem; }
+  .char-bio{ color:var(--text-muted); font-size:.95rem; }
+  .char-quote{
+    text-align:center; max-width:34rem; margin:2.5rem auto 0; color:var(--text-muted); font-size:1.02rem; font-style:italic;
+  }
+
+  /* ===== HISTORY / TIMELINE ===== */
+  .timeline{ position:relative; padding-left:1.9rem; }
+  .timeline::before{
+    content:""; position:absolute; left:6px; top:.5rem; bottom:.5rem; width:2px;
+    background:linear-gradient(var(--cyan), var(--pink), var(--purple));
+    opacity:.35;
+  }
+  .t-item{ position:relative; padding-bottom:2rem; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-dot{
+    position:absolute; left:-1.9rem; top:.3rem; width:14px; height:14px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--cyan); box-shadow:0 0 10px rgba(0,230,255,.5);
+  }
+  .t-item.future .t-dot{ border-color:var(--lime); box-shadow:0 0 10px rgba(195,255,61,.5); animation:pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.25); opacity:.6; } }
+  @media (prefers-reduced-motion: reduce){ .t-item.future .t-dot{ animation:none; } }
+  .t-date{ font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:.35rem; display:flex; align-items:center; gap:.6rem; }
+  .t-status{ font-size:.64rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:.16rem .5rem; border-radius:999px; }
+  .t-status.released{ background:rgba(0,230,255,.14); color:var(--cyan); }
+  .t-status.upcoming{ background:rgba(195,255,61,.14); color:var(--lime); }
+  .t-title{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; margin-bottom:.35rem; }
+  .t-desc{ color:var(--text-muted); font-size:.94rem; max-width:34rem; }
+
+  /* ===== JOIN ===== */
+  .join-box{
+    background:linear-gradient(160deg, rgba(255,45,149,.09), rgba(0,230,255,.06));
+    border:1px solid rgba(255,45,149,.28); border-radius:28px; padding:3.2rem 2.2rem; text-align:center;
+    max-width:44rem; margin:0 auto;
+  }
+  .join-box h2{ font-size:clamp(1.6rem,4vw,2.3rem); font-weight:700; margin-bottom:.85rem; }
+  .join-box p{ color:var(--text-muted); font-size:1.04rem; margin-bottom:1.8rem; }
+  .join-form{ display:flex; gap:.65rem; max-width:26rem; margin:0 auto 1.1rem; flex-wrap:wrap; justify-content:center; }
+  .join-form input{
+    flex:1; min-width:190px; padding:.85rem 1.1rem; border-radius:999px; border:1px solid var(--border);
+    background:rgba(0,0,0,.4); color:var(--text); font-size:.92rem; outline:none; font-family:inherit;
+  }
+  .join-form input:focus{ border-color:var(--cyan); }
+  .join-form button{
+    padding:.85rem 1.5rem; border-radius:999px; border:none; background:var(--pink); color:#fff;
+    font-weight:700; cursor:pointer; transition:box-shadow .2s ease; font-size:.92rem;
+  }
+  .join-form button:hover{ box-shadow:0 0 24px rgba(255,45,149,.4); }
+  .join-status{ min-height:1.3rem; font-size:.85rem; color:var(--lime); margin-bottom:.5rem; }
+  .social-row{ display:flex; gap:1.1rem; justify-content:center; flex-wrap:wrap; margin-top:1.1rem; }
+  .social-row a{ font-size:.83rem; font-weight:600; color:var(--text-muted); transition:color .2s ease; }
+  .social-row a:hover{ color:var(--cyan); }
+
+  /* ===== FOOTER ===== */
+  .footer{ border-top:1px solid var(--border); padding:2.4rem 0 calc(2.4rem + env(safe-area-inset-bottom,0px)); text-align:center; color:var(--text-dim); font-size:.85rem; }
+  .footer strong{ color:var(--text); }
+
+  @media (max-width:900px){
+    .saga-ep{ grid-template-columns:1fr; }
+    .saga-art{ order:-1; max-width:260px; margin:0 auto; }
+  }
+  @media (max-width:640px){
+    .nav-links{ gap:1rem; }
+    .section{ padding:3.2rem 0; }
+    .hero{ padding:3.2rem 0 3.6rem; }
+  }
+
+  .ring-text text{
+    font-family:'Space Grotesk',system-ui,sans-serif !important;
+    fill:url(#ringChrome); font-weight:700; font-size:12.5px;
+    paint-order:stroke; stroke:rgba(75,58,107,.9); stroke-width:.9px;
+  }
+  .ring-text text.ring-glint{ fill:url(#ringGlint); stroke:none; }
+  .ring-text{ filter:drop-shadow(0 0 3px rgba(164,246,255,.6)) drop-shadow(0 0 10px rgba(255,209,243,.35)); }
+  /* Logo-style display font (Shrikhand has one weight — avoid faux-bold) */
+  h1,h2,h3,h4,.nav-logo,.globe-word,.ticker-track span,.video-title,.track-title,.saga-locked h4,
+  .transmission-name,.char-name,.t-title{ font-weight:400 !important; letter-spacing:.005em; }
+  .hero h1, .section-title{
+    background:linear-gradient(170deg,#ffffff 0%,#d6e6ff 22%,#8fa6c9 40%,#ffd1f3 55%,#a4f6ff 70%,#ececff 85%,#a3aec6 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(75,58,107,.9)) drop-shadow(0 0 14px rgba(160,200,255,.28));
+    line-height:1.12; padding-bottom:.08em;
+  }
+  /* ===== SHOWS ===== */
+  .show-list{ display:flex; flex-direction:column; gap:.9rem; margin-bottom:2.4rem; }
+  .show-row{
+    display:grid; grid-template-columns:auto 1fr auto; gap:1.3rem; align-items:center;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.1rem 1.3rem;
+    transition:border-color .25s ease, box-shadow .25s ease;
+  }
+  .show-row:hover{ border-color:rgba(195,255,61,.35); box-shadow:0 0 26px rgba(195,255,61,.07); }
+  .show-date{
+    width:4.4rem; text-align:center; border-radius:14px; padding:.55rem .3rem;
+    background:rgba(195,255,61,.1); border:1px solid rgba(195,255,61,.28); line-height:1.1;
+  }
+  .show-date .m{ display:block; font-size:.68rem; font-weight:700; letter-spacing:.12em; color:var(--lime); text-transform:uppercase; }
+  .show-date .d{ display:block; font-family:var(--font-display); font-size:1.7rem; color:var(--text); margin-top:.15rem; }
+  .show-date .y{ display:block; font-size:.64rem; color:var(--text-dim); margin-top:.1rem; }
+  .show-name{ font-family:var(--font-display); font-size:1.12rem; line-height:1.25; }
+  .show-where{ color:var(--text-muted); font-size:.88rem; margin-top:.2rem; }
+  .show-note{ color:var(--text-dim); font-size:.8rem; margin-top:.15rem; }
+  .show-cta{ display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end; }
+  .btn-sm{ padding:.6rem 1.1rem; font-size:.82rem; }
+  .empty-card{
+    border:1px dashed var(--border-strong); border-radius:var(--radius); padding:2rem 1.6rem; text-align:center;
+    color:var(--text-muted); background:rgba(255,255,255,.015);
+  }
+  .empty-card h3{ font-size:1.25rem; color:var(--text); margin-bottom:.45rem; }
+  .empty-card p{ max-width:32rem; margin:0 auto 1.2rem; font-size:.95rem; }
+  .empty-card .btns{ display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; }
+  @media (max-width:640px){
+    .show-row{ grid-template-columns:auto 1fr; }
+    .show-cta{ grid-column:1 / -1; justify-content:flex-start; }
+  }
+
+  /* contact / booking form */
+  .contact-box{
+    background:linear-gradient(160deg, rgba(0,230,255,.07), rgba(179,75,255,.06));
+    border:1px solid rgba(0,230,255,.25); border-radius:24px; padding:2rem 1.6rem;
+  }
+  .contact-box h3{ font-size:1.45rem; margin-bottom:.35rem; }
+  .contact-box > p{ color:var(--text-muted); font-size:.95rem; margin-bottom:1.4rem; max-width:36rem; }
+  .contact-form{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:.8rem; }
+  .contact-form .full{ grid-column:1 / -1; }
+  .contact-form label{ display:block; font-size:.74rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.35rem; }
+  .contact-form input, .contact-form select, .contact-form textarea{
+    width:100%; padding:.8rem 1rem; border-radius:14px; border:1px solid var(--border-strong);
+    background:rgba(0,0,0,.45); color:var(--text); font:inherit; font-size:.92rem; outline:none;
+  }
+  .contact-form select{ appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%); background-position:calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size:5px 5px; background-repeat:no-repeat; }
+  .contact-form textarea{ min-height:7.5rem; resize:vertical; }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus{ border-color:var(--cyan); }
+  .contact-form .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .contact-actions{ display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .contact-status{ font-size:.88rem; color:var(--lime); min-height:1.3rem; }
+  @media (max-width:640px){ .contact-form{ grid-template-columns:1fr; } }
+
+  /* ===== LIVE MEDIA / MERCH / CREW grids ===== */
+  .media-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%,250px),1fr)); gap:1.2rem; }
+  .media-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+    display:flex; flex-direction:column; transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  }
+  .media-card:hover{ border-color:rgba(255,45,149,.38); box-shadow:0 0 26px rgba(255,45,149,.1); transform:translateY(-2px); }
+  .media-thumb{ position:relative; aspect-ratio:1/1; background:#000; overflow:hidden; display:block; }
+  .media-thumb.wide{ aspect-ratio:16/9; }
+  .media-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .media-thumb iframe{ width:100%; height:100%; border:0; display:block; }
+  .media-thumb .ph{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; padding:1rem;
+    background:radial-gradient(circle at 30% 20%, rgba(255,45,149,.25), transparent 55%), radial-gradient(circle at 75% 80%, rgba(0,230,255,.22), transparent 55%), #0b0a12;
+    font-family:var(--font-display); font-size:1.3rem; color:var(--text);
+  }
+  .media-kind{
+    position:absolute; left:.6rem; top:.6rem; font-size:.64rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    padding:.22rem .5rem; border-radius:999px; background:rgba(5,5,8,.75); color:var(--text);
+  }
+  .media-body{ padding:1rem 1.1rem 1.2rem; display:flex; flex-direction:column; gap:.35rem; flex:1; }
+  .media-title{ font-family:var(--font-display); font-size:1.02rem; line-height:1.3; }
+  .media-meta{ font-size:.8rem; color:var(--text-dim); }
+  .media-price{ font-weight:700; color:var(--lime); font-size:.95rem; }
+  .media-body .btn{ margin-top:auto; align-self:flex-start; }
+  .section-foot{ display:flex; gap:.7rem; flex-wrap:wrap; margin-top:1.6rem; }
+
+  .crew-card{ padding:1.5rem; gap:.6rem; }
+  .crew-top{ display:flex; align-items:center; gap:.9rem; }
+  .crew-avatar{
+    width:3.4rem; height:3.4rem; border-radius:50%; flex:none; overflow:hidden; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(140deg, var(--lime), var(--cyan)); color:#07060b; font-family:var(--font-display); font-size:1.2rem;
+  }
+  .crew-avatar img{ width:100%; height:100%; object-fit:cover; }
+  .crew-role{ font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--cyan); }
+  .crew-card p{ color:var(--text-muted); font-size:.92rem; }
+  .crew-links{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:auto; padding-top:.4rem; }
+  .crew-links a{
+    font-size:.78rem; font-weight:600; color:var(--text-muted); padding:.35rem .7rem;
+    border:1px solid var(--border); border-radius:999px; transition:all .2s ease;
+  }
+  .crew-links a:hover{ color:var(--cyan); border-color:var(--cyan); }
+  .crew-card.label{ border-color:rgba(195,255,61,.3); }
+
+  /* nav: one scrollable row on small screens */
+  @media (max-width:760px){
+    .nav-inner{ flex-direction:column; align-items:flex-start; gap:.6rem; }
+    .nav-links{ flex-wrap:nowrap; width:100%; overflow-x:auto; scrollbar-width:none; padding-bottom:.2rem; }
+    .nav-links::-webkit-scrollbar{ display:none; }
+    .nav-links a{ white-space:nowrap; }
+  }
+  @media (max-width:640px){
+    #live-grid, #merch-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:.7rem; }
+    #live-grid .media-body, #merch-grid .media-body{ padding:.75rem .8rem .9rem; }
+    #live-grid .empty-card, #merch-grid .empty-card{ grid-column:1 / -1; }
+  }
+  .media-title, .show-name, .empty-card h3, .contact-box h3, .crew-card h3{ font-weight:400 !important; }
+</style>
+
+<canvas id="rain-canvas" aria-hidden="true"></canvas>
+<div class="bg-glow" aria-hidden="true"></div>
+<div class="storm-logo" id="storm-logo" aria-hidden="true"><img src="/img/tnr-mark.webp" alt="" decoding="async"></div>
+<div class="storm-pill" id="storm-pill" role="status" aria-live="polite">
+  <span class="sp-text" id="storm-text">☔ Stick around. It’s about to pour.</span>
+  <button type="button" class="sp-pause" id="storm-pause" aria-label="Pause music" hidden>❚❚</button>
+  <button type="button" class="sp-peek" id="storm-peek">👀 Peek</button>
+  <button type="button" class="sp-x" id="storm-x" aria-label="Dismiss rain report">✕</button>
+</div>
+<div class="sc-dock" id="sc-dock" aria-hidden="true">
+  <div class="sc-dock-head">
+    <span class="sc-now" id="sc-now">🎵 Do you TripN DaRain?</span>
+    <button type="button" class="sc-close" id="sc-close" aria-label="Hide player">✕</button>
+  </div>
+  <iframe id="sc-frame" title="TripN DaRain on SoundCloud" allow="autoplay; encrypted-media" scrolling="no" frameborder="no" height="166"></iframe>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">TRIPn<span>DaRAIN</span></a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#videos" data-nav>Videos</a></li>
+      <li><a href="#music" data-nav>Music</a></li>
+      <li><a href="#shows" data-nav>Shows</a></li>
+      <li><a href="#live" data-nav>Live</a></li>
+      <li><a href="#saga" data-nav>Saga</a></li>
+      <li><a href="#characters" data-nav>Characters</a></li>
+      <li><a href="#merch" data-nav>Merch</a></li>
+      <li><a href="#crew" data-nav>Crew</a></li>
+      <li><a href="#join" data-nav>Join</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="globe-wrap">
+      <div class="laser laser-a"></div>
+      <div class="laser laser-b"></div>
+      <div class="laser laser-c"></div>
+      <div class="ring ring-b" aria-hidden="true"></div>
+      <div class="ring ring-a" aria-hidden="true"></div>
+      <svg class="ring-text" viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <path id="ringPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/>
+          <linearGradient id="ringChrome" gradientUnits="userSpaceOnUse" x1="22" y1="22" x2="178" y2="178">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset=".18" stop-color="#d6e6ff"/>
+            <stop offset=".36" stop-color="#8fa6c9"/>
+            <stop offset=".5" stop-color="#ffd1f3"/>
+            <stop offset=".64" stop-color="#a4f6ff"/>
+            <stop offset=".8" stop-color="#ececff"/>
+            <stop offset="1" stop-color="#a3aec6"/>
+            <animateTransform attributeName="gradientTransform" type="rotate" from="0 100 100" to="-360 100 100" dur="7s" repeatCount="indefinite"/>
+          </linearGradient>
+          <!-- a narrow white glint that sweeps across the chrome letters -->
+          <linearGradient id="ringGlint" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="200" y2="100">
+            <stop offset=".40" stop-color="#fff" stop-opacity="0"/>
+            <stop offset=".49" stop-color="#fff" stop-opacity=".95"/>
+            <stop offset=".51" stop-color="#fff" stop-opacity=".95"/>
+            <stop offset=".60" stop-color="#fff" stop-opacity="0"/>
+            <animateTransform attributeName="gradientTransform" type="rotate" from="0 100 100" to="360 100 100" dur="3.2s" repeatCount="indefinite"/>
+          </linearGradient>
+        </defs>
+        <text><textPath href="#ringPath" startOffset="0" textLength="489" lengthAdjust="spacing">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
+        <text class="ring-glint"><textPath href="#ringPath" startOffset="0" textLength="489" lengthAdjust="spacing">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
+      </svg>
+      <button type="button" class="globe" id="easy-btn" aria-label="Play TripN DaRain" aria-pressed="false">
+        <span class="globe-lcd" aria-hidden="true"></span>
+        <span class="globe-word"><span>TRIPn</span><span>DaRAIN</span></span>
+        <span class="easy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="100%" height="100%"><path class="i-play" d="M8 5.5v13l11-6.5z"/><path class="i-pause" d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg></span>
+      </button>
+      <div class="easy-bubble asking gone" id="easy-bubble" role="dialog" aria-live="polite" aria-label="Play music?">
+        <span class="eb-text">Can we play you<br>some music?</span>
+        <span class="eb-btns"><button type="button" class="eb-yes" id="eb-yes">🔊 Yes</button><button type="button" class="eb-no" id="eb-no">Not now</button></span>
+      </div>
+    </div>
+    <div class="eyebrow">THE SAMETHING WE DO EVERYNIGHT</div>
+    <h1>THE NEVER-ENDING<br>SAGA.</h1>
+    <p class="hero-sub">Some nights a melody starts a track. Some nights the bass finishes it. Some nights are for world domination.</p>
+    <p class="hero-tags">PSY-TRANCE &middot; DRUM &amp; BASS &middot; HOUSE</p>
+    <div class="hero-actions">
+      <a href="#videos" class="btn btn-primary">▶ Watch the Chaos</a>
+      <a href="#saga" class="btn btn-ghost">Enter the Saga</a>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA ✦ WORLD DOMINATION ✦ BASS DREAMS RECORDS ✦ ELECTRONIC UMBRELLA ✦ HOUSE ✦ THE SAMETHING WE DO EVERYNIGHT ✦&nbsp;</span>
+      <span>PSYTRANCE ✦ DRUM &amp; BASS ✦ BASS HOUSE ✦ THE SAGA ✦ WORLD DOMINATION ✦ BASS DREAMS RECORDS ✦ ELECTRONIC UMBRELLA ✦ HOUSE ✦ THE SAMETHING WE DO EVERYNIGHT ✦&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- VIDEOS -->
+  <section class="section" id="videos">
+    <div class="section-head">
+      <div class="section-label">The Saga</div>
+      <h2 class="section-title">WATCH IT HAPPEN</h2>
+    </div>
+    <div class="video-grid">
+
+      <article class="video-card">
+        <button class="video-frame" data-yt="KqHEotr0XfI" aria-label="Play THE SAME THING WE DO EVERY NIGHT">
+          <img src="/img/video-KqHEotr0XfI.webp" alt="" loading="lazy">
+          <span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+          <span class="video-len">50:18</span>
+        </button>
+        <div class="video-body">
+          <span class="video-tag">Most Played</span>
+          <h3 class="video-title">THE SAME THING WE DO EVERY NIGHT</h3>
+          <div class="video-meta"><span>DnB &middot; Psytrance &middot; Bass House</span><span>643 views</span></div>
+          <a class="video-link" href="https://www.youtube.com/watch?v=KqHEotr0XfI" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </article>
+
+      <article class="video-card">
+        <button class="video-frame" data-yt="j7coJFdEyh8" aria-label="Play MY TIRE">
+          <img src="/img/video-j7coJFdEyh8.webp" alt="" loading="lazy">
+          <span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+          <span class="video-len">2:01</span>
+        </button>
+        <div class="video-body">
+          <span class="video-tag" style="background:rgba(195,255,61,.15); color:var(--lime);">Newest</span>
+          <h3 class="video-title">My Tire</h3>
+          <div class="video-meta"><span>House</span><span>40 views</span></div>
+          <a class="video-link" href="https://www.youtube.com/watch?v=j7coJFdEyh8" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </article>
+
+      <article class="video-card">
+        <button class="video-frame" data-yt="B8aBKGMkQC4" aria-label="Play Pitter Patter">
+          <img src="/img/video-B8aBKGMkQC4.webp" alt="" loading="lazy">
+          <span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+          <span class="video-len">6:07</span>
+        </button>
+        <div class="video-body">
+          <span class="video-tag" style="background:rgba(0,230,255,.15); color:var(--cyan);">Our Favorite</span>
+          <h3 class="video-title">Pitter Patter</h3>
+          <div class="video-meta"><span>Psy-Trance &middot; 145 BPM</span><span>74 views</span></div>
+          <a class="video-link" href="https://www.youtube.com/watch?v=B8aBKGMkQC4" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </article>
+
+      <article class="video-card">
+        <button class="video-frame" data-yt="9_zSkomHc5o" aria-label="Play Make Them Listen">
+          <img src="/img/video-9_zSkomHc5o.webp" alt="" loading="lazy">
+          <span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+          <span class="video-len">5:53</span>
+        </button>
+        <div class="video-body">
+          <span class="video-tag">Field Transmission</span>
+          <h3 class="video-title">"Make Them Listen"</h3>
+          <div class="video-meta"><span>Psy-Trance &middot; 145 BPM</span><span>45 views</span></div>
+          <a class="video-link" href="https://www.youtube.com/watch?v=9_zSkomHc5o" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </article>
+
+      <article class="video-card">
+        <button class="video-frame" data-yt="yoXANP9D4Ew" aria-label="Play People Don't Dance">
+          <img src="/img/video-yoXANP9D4Ew.webp" alt="" loading="lazy">
+          <span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span>
+          <span class="video-len">2:57</span>
+        </button>
+        <div class="video-body">
+          <span class="video-tag">Bass House Banger</span>
+          <h3 class="video-title">People Don't Dance</h3>
+          <div class="video-meta"><span>120 BPM House</span><span>69 views</span></div>
+          <a class="video-link" href="https://www.youtube.com/watch?v=yoXANP9D4Ew" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MUSIC -->
+  <section class="section" id="music">
+    <div class="section-head">
+      <div class="section-label">Listen to These</div>
+      <p class="section-desc">Press play and keep the saga moving.</p>
+    </div>
+    <div class="track-grid">
+
+      <article class="track-card featured">
+        <span class="track-tag tag-most">Most Plays</span>
+        <h3 class="track-title">THE SAME THING WE DO EVERY NIGHT</h3>
+        <p class="track-genre">DnB &middot; Psytrance &middot; Bass House</p>
+        <div class="track-links">
+          <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+          <a href="https://www.youtube.com/@TRIPNDARAIN" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </article>
+
+      <article class="track-card">
+        <span class="track-tag tag-newest">Newest</span>
+        <h3 class="track-title">My Tire</h3>
+        <p class="track-genre">Bass</p>
+        <div class="track-links">
+          <a href="https://open.spotify.com/search/My%20Tire%20TripN%20DaRain" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+        </div>
+      </article>
+
+      <article class="track-card">
+        <span class="track-tag tag-fav">Our Favorite</span>
+        <h3 class="track-title">Pitter Patter</h3>
+        <p class="track-genre">Psytrance</p>
+        <div class="track-links">
+          <a href="https://open.spotify.com/album/3qXednSNgHCKy6OSVIuoKF" target="_blank" rel="noopener">Spotify</a>
+          <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+        </div>
+      </article>
+
+      <article class="track-card">
+        <h3 class="track-title">Coming on Strong</h3>
+        <p class="track-genre">Dance &amp; EDM</p>
+        <div class="track-links">
+          <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+        </div>
+      </article>
+
+      <article class="track-card">
+        <h3 class="track-title">HuRrY uP n Wai'T</h3>
+        <p class="track-genre">Drum &amp; Bass</p>
+        <div class="track-links">
+          <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+        </div>
+      </article>
+
+      <article class="track-card">
+        <h3 class="track-title">Mind Split</h3>
+        <p class="track-genre">Electronic</p>
+        <div class="track-links">
+          <a href="https://open.spotify.com/search/Mind%20Split%20TripN%20DaRain" target="_blank" rel="noopener">Spotify</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SHOWS -->
+  <section class="section" id="shows">
+    <div class="section-head">
+      <div class="section-label">Upcoming Shows</div>
+      <h2 class="section-title">Catch it live</h2>
+      <p class="section-desc">Where the downpour hits next. Grab tickets, or hit us up and we&rsquo;ll sort you out.</p>
+    </div>
+    <div class="show-list" id="show-list"></div>
+
+    <div class="contact-box" id="contact">
+      <h3>Tickets, bookings &amp; merch</h3>
+      <p>Want tickets, want us at your event, or want a shirt before the drop? Send it here and we&rsquo;ll get back to you.</p>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div><label for="c-name">Name</label><input id="c-name" name="name" autocomplete="name" required maxlength="100"></div>
+        <div><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
+        <div><label for="c-type">What&rsquo;s it about?</label>
+          <select id="c-type" name="type">
+            <option>Tickets</option><option>Booking</option><option>Merch</option><option>Something else</option>
+          </select></div>
+        <div><label for="c-show">Show / event / item <span style="text-transform:none;letter-spacing:0;font-weight:500">(optional)</span></label><input id="c-show" name="show" maxlength="200"></div>
+        <div class="full"><label for="c-msg">Message</label><textarea id="c-msg" name="message" required maxlength="2000"></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="c-web">Website</label><input id="c-web" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="full contact-actions">
+          <button type="submit" class="btn btn-primary">Send it</button>
+          <span class="contact-status" id="contact-status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- LIVE -->
+  <section class="section" id="live">
+    <div class="section-head">
+      <div class="section-label">Past Shows</div>
+      <h2 class="section-title">Evidence from the field</h2>
+      <p class="section-desc">Photos and footage from the nights that got out of hand.</p>
+    </div>
+    <div class="media-grid" id="live-grid"></div>
+    <div class="section-foot">
+      <a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">More on Instagram</a>
+      <a class="btn btn-ghost btn-sm" href="https://www.youtube.com/@TRIPNDARAIN" target="_blank" rel="noopener">More on YouTube</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SAGA -->
+  <section class="section" id="saga">
+    <div class="section-head">
+      <div class="section-label">The Saga of TripN DaRain</div>
+      <h2 class="section-title">Every night</h2>
+      <p class="section-desc">It starts raining. The melodies get sharper. The bass gets heavier. Nobody leaves.</p>
+    </div>
+
+    <div class="saga-ep">
+      <div>
+        <div class="saga-ep-label">Episode 01</div>
+        <h3>MAKE THEM LISTEN</h3>
+        <p>&ldquo;The lab was silent except for the gentle hiss of the soundproof door&hellip;&rdquo; Rain paces slowly in his lightly glowing hat&hellip; Trip sits on the floor cross-legged with a bass.</p>
+      </div>
+      <div class="saga-art">
+        <img src="/img/rain-5.webp" alt="Rain, mid-shrug" loading="lazy">
+      </div>
+    </div>
+
+    <div class="saga-locked-grid">
+      <div class="saga-locked ep2">
+        <h4>Episode 02 &middot; FUCK THE SILANCE is Coming Soon</h4>
+        <p>More stories incoming. Every festival can become another episode.</p>
+      </div>
+      <div class="saga-locked ep3">
+        <h4>Episode 03 &middot; Locked</h4>
+        <p>The next transmission is still being written.</p>
+      </div>
+    </div>
+
+    <div class="transmissions">
+      <details class="transmission">
+        <summary class="transmission-head">
+          <span class="transmission-title">
+            <span class="transmission-eyebrow">Field Transmission &middot; 3:00 AM, The Lab</span>
+            <span class="transmission-name">"Tonight, We Make Them Listen"</span>
+          </span>
+          <span class="transmission-icon">+</span>
+        </summary>
+        <div class="transmission-body">
+          <p>The lab is dark, only the backlights on. Rain paces slow, hat glowing faint electric blue. Trip sits cross-legged on the floor with the bass, sniffing his own fingers like inspiration has a smell and he just found it.</p>
+          <p>Rain stops. Turns to the camera. Points, dead certain: <em>"Tonight is the night we make them listen."</em></p>
+          <p>Trip looks up, deadly serious: <em>"They don't deserve us. We gotta dumb it down."</em> Rain isn't moved: <em>"No. We go raw. No effects. Just us and the wreckage."</em></p>
+          <p>They freeze. Long stare. Then, together: <em>"What are we gonna do tonight? The same thing we do every night."</em></p>
+        </div>
+      </details>
+
+      <details class="transmission">
+        <summary class="transmission-head">
+          <span class="transmission-title">
+            <span class="transmission-eyebrow">Field Transmission &middot; Rooftop of an Abandoned Hardee's</span>
+            <span class="transmission-name">The Downpour</span>
+          </span>
+          <span class="transmission-icon">+</span>
+        </summary>
+        <div class="transmission-body">
+          <p>3:00 AM. Rain stands on the rusted roof, black umbrella in hand, city lights melting off the edge like wax. Not a cloud in the sky &mdash; but the air feels wet anyway.</p>
+          <p>Trip climbs the wall using only his teeth, dragging a busted sub that leaks bass like blood. <em>"Our bass is ready,"</em> he growls, sniffing the rooftop like a rabid mouse.</p>
+          <p>Rain opens the umbrella. It doesn't stop expanding &mdash; it becomes a dome, a cathedral of carbon fiber and lasers. Every rat on the block becomes a backing vocalist. Somewhere below, a drive-thru menu turns into a waveform.</p>
+          <p>Trip looks at Rain. Rain looks at Trip. <em>"What are we gonna do?"</em></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CHARACTERS -->
+  <section class="section" id="characters">
+    <div class="section-head">
+      <div class="section-label">World Domination</div>
+      <h2 class="section-title">The Alliance</h2>
+      <p class="section-desc">He writes melodies that make angels cry acid. He writes bass lines that make devils flinch. Together they became TripN DaRain.</p>
+    </div>
+
+    <div class="char-grid">
+
+      <article class="char-card" data-character="trip">
+        <div class="char-stage"><img id="trip-stage-img" src="/img/trip-1.webp" alt="Trip, the mouse in the TNR cap"></div>
+        <div class="char-poses">
+          <button class="pose-dot active" data-img="/img/trip-1.webp"><img src="/img/trip-1.webp" alt="Trip pose 1"></button>
+          <button class="pose-dot" data-img="/img/trip-2.webp"><img src="/img/trip-2.webp" alt="Trip pose 2"></button>
+          <button class="pose-dot" data-img="/img/trip-3.webp"><img src="/img/trip-3.webp" alt="Trip pose 3"></button>
+          <button class="pose-dot" data-img="/img/trip-4.webp"><img src="/img/trip-4.webp" alt="Trip pose 4"></button>
+          <button class="pose-dot" data-img="/img/trip-5.webp"><img src="/img/trip-5.webp" alt="Trip pose 5"></button>
+        </div>
+        <h3 class="char-name">Trip</h3>
+        <div class="char-role">Chaos &middot; Bass &middot; Side Quest Legend</div>
+        <p class="char-bio">He brings the energy that turns a quiet night into a problem &mdash; and the bassline that turns the problem into a drop.</p>
+      </article>
+
+      <article class="char-card" data-character="rain">
+        <div class="char-stage"><img id="rain-stage-img" src="/img/rain-3.webp" alt="Rain tipping his feathered hat"></div>
+        <div class="char-poses">
+          <button class="pose-dot" data-img="/img/rain-1.webp"><img src="/img/rain-1.webp" alt="Rain pose 1"></button>
+          <button class="pose-dot" data-img="/img/rain-2.webp"><img src="/img/rain-2.webp" alt="Rain pose 2"></button>
+          <button class="pose-dot active" data-img="/img/rain-3.webp"><img src="/img/rain-3.webp" alt="Rain pose 3"></button>
+          <button class="pose-dot" data-img="/img/rain-4.webp"><img src="/img/rain-4.webp" alt="Rain pose 4"></button>
+          <button class="pose-dot" data-img="/img/rain-5.webp"><img src="/img/rain-5.webp" alt="Rain pose 5"></button>
+        </div>
+        <h3 class="char-name">Rain</h3>
+        <div class="char-role">Focused &middot; Melody &middot; Master Mind</div>
+        <p class="char-bio">Cool under pressure, dangerous when he isn't. He turns chaos into something that actually hits.</p>
+      </article>
+
+    </div>
+
+    <p class="char-quote">Suddenly&mdash; a rumble. Not thunder. Not bass. Something deeper. The ground beneath the Hardee&rsquo;s starts to beat.</p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MERCH -->
+  <section class="section" id="merch">
+    <div class="section-head">
+      <div class="section-label">Merch</div>
+      <h2 class="section-title">Wear the saga</h2>
+      <p class="section-desc">Shirts and gear from the World Domination Department.</p>
+    </div>
+    <div class="media-grid" id="merch-grid"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CREW -->
+  <section class="section" id="crew">
+    <div class="section-head">
+      <div class="section-label">The Label &amp; The Crew</div>
+      <h2 class="section-title">Check these out</h2>
+      <p class="section-desc">Our record label and the artists we run with.</p>
+    </div>
+    <div class="media-grid" id="crew-grid"></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- HISTORY -->
+  <section class="section" id="history">
+    <div class="section-head">
+      <div class="section-label">Case File</div>
+      <h2 class="section-title">How we got here.</h2>
+      <p class="section-desc">The story so far, straight from the release log &mdash; plus what's loading next.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <div class="t-date">Dec 7, 2025 <span class="t-status released">Released</span></div>
+        <div class="t-title">World Domination Department opens for business</div>
+        <p class="t-desc">The channel goes live. Two anonymous forces sign on for one unholy alliance &mdash; no past, no mercy, only the downpour.</p>
+      </div>
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <div class="t-date">Feb 22, 2026 <span class="t-status released">Released</span></div>
+        <div class="t-title">"THE SAME THING WE DO EVERY NIGHT" drops</div>
+        <p class="t-desc">DnB, psytrance, and bass house collide. Still the most-played transmission in the catalog.</p>
+      </div>
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <div class="t-date">Mar 22, 2026 <span class="t-status released">Released</span></div>
+        <div class="t-title">"Pitter Patter" lands</div>
+        <p class="t-desc">145 BPM psytrance &mdash; the one they keep coming back to.</p>
+      </div>
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <div class="t-date">Jul 22, 2026 <span class="t-status released">Released</span></div>
+        <div class="t-title">Double transmission: "Make Them Listen" + "People Don't Dance"</div>
+        <p class="t-desc">A 145 BPM psy-trance manifesto and a 120 BPM house banger, same day.</p>
+      </div>
+      <div class="t-item">
+        <span class="t-dot"></span>
+        <div class="t-date">Aug 22, 2026 <span class="t-status released">Released</span></div>
+        <div class="t-title">"My Tire"</div>
+        <p class="t-desc">The newest drop. House, and a little unhinged.</p>
+      </div>
+      <div class="t-item future">
+        <span class="t-dot"></span>
+        <div class="t-date">Next <span class="t-status upcoming">Loading</span></div>
+        <div class="t-title">Saga Episode 02 + more live dates</div>
+        <p class="t-desc">Episode 02 is being written and more shows are loading &mdash; join the list below and you'll hear first, before anyone else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN -->
+  <section class="section" id="join">
+    <div class="join-box">
+      <h2>Let's TripN DaRain Together</h2>
+      <p>Join the crew. Get heads-up on new drops, saga chapters, and shows before anyone else.</p>
+      <form class="join-form" id="join-form">
+        <label for="join-email" style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">Email address</label>
+        <input id="join-email" type="email" placeholder="Your email" required>
+        <button type="submit">Get In</button>
+      </form>
+      <div class="join-status" id="join-status" role="status" aria-live="polite"></div>
+      <div class="social-row">
+        <a href="https://linktr.ee/tripndarain" target="_blank" rel="noopener">Linktree</a>
+        <a href="https://soundcloud.com/trip-n-da-rain" target="_blank" rel="noopener">SoundCloud</a>
+        <a href="https://www.youtube.com/@TRIPNDARAIN" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.tiktok.com/@tripndarain" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://x.com/tripndarain" target="_blank" rel="noopener">X</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <img class="logo-mark-small" src="/img/tnr-mark.webp" alt="TripN DaRain mark" width="34" height="46" loading="lazy">
+    <p><strong>TripN DaRain</strong> &middot; World Domination Department &middot; &copy; 2026</p>
+  </footer>
+
+</div>
+
+<script>
+/* =====================================================================
+   SITE CONTENT — shows, live media, merch, crew.
+   Add/remove entries here; the sections build themselves.
+   ===================================================================== */
+window.TNR = {
+  // Upcoming shows. date = "YYYY-MM-DD". Shows drop off the list the day after.
+  // ticketUrl: link to buy tickets (leave "" to show a "Request tickets" button instead).
+  shows: [
+    // { date:"2026-11-14", name:"Event name", venue:"Venue", city:"Los Angeles, CA", note:"", ticketUrl:"" },
+  ],
+
+  // Past-show photos & videos.
+  // YouTube:   { type:"youtube", id:"VIDEO_ID", title:"", date:"", place:"" }
+  // Instagram: { type:"instagram", url:"https://www.instagram.com/p/XXXX/", image:"/img/live/xxx.webp", title:"", date:"", place:"" }
+  // Photo:     { type:"photo", image:"/img/live/xxx.webp", url:"", title:"", date:"", place:"" }
+  live: [
+  ],
+
+  // Merch. url = where "Get it" goes (store, Instagram post, etc.). Leave "" to use the order form.
+  merch: [
+    // { name:"TNR Tee", price:"$30", image:"/img/merch/tee.webp", url:"" },
+  ],
+
+  // Label + artists we run with.
+  crew: [
+    { name:"Bass Dreams Records", role:"Our record label", label:true, image:"",
+      blurb:"Music Lives Further. Drum & bass collective and our home label.",
+      links:[ { label:"Instagram", url:"https://www.instagram.com/bassdreams40hz" } ] },
+  ]
+};
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- scroll-spy nav ----
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('#nav-links a[data-nav]'));
+  var sections = navLinks.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+  if ('IntersectionObserver' in window && sections.length){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          var id = entry.target.id;
+          navLinks.forEach(function(a){
+            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+  }
+
+  // ---- character pose swapper ----
+  document.querySelectorAll('.char-card').forEach(function(card){
+    var stageImg = card.querySelector('.char-stage img');
+    var dots = card.querySelectorAll('.pose-dot');
+    dots.forEach(function(dot){
+      dot.addEventListener('click', function(){
+        var src = dot.getAttribute('data-img');
+        if (!src || !stageImg) return;
+        stageImg.style.opacity = '0';
+        setTimeout(function(){
+          stageImg.src = src;
+          stageImg.style.opacity = '1';
+        }, 120);
+        dots.forEach(function(d){ d.classList.remove('active'); });
+        dot.classList.add('active');
+      });
+    });
+  });
+  document.querySelectorAll('.char-stage img').forEach(function(img){
+    img.style.transition = 'opacity .15s ease, transform .35s ease';
+  });
+
+  // ---- video click-to-embed ----
+  document.querySelectorAll('.video-frame').forEach(function(frame){
+    frame.addEventListener('click', function(){
+      var id = frame.getAttribute('data-yt');
+      if (!id) return;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      iframe.title = 'YouTube video player';
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.loading = 'lazy';
+      frame.innerHTML = '';
+      frame.appendChild(iframe);
+      frame.style.cursor = 'default';
+    }, { once: true });
+  });
+
+  // ---- join form (no backend — local confirmation only) ----
+  var joinForm = document.getElementById('join-form');
+  var joinStatus = document.getElementById('join-status');
+  if (joinForm){
+    joinForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = document.getElementById('join-email').value.trim();
+      if (!email) return;
+      var btn = joinForm.querySelector('button');
+      btn.disabled = true;
+      joinStatus.style.color = '';
+      joinStatus.textContent = 'Transmitting...';
+      fetch('/api/join', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email: email }) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok: r.ok, d: d }; }); })
+        .then(function(res){
+          if (res.ok){ joinStatus.textContent = "You're in. The World Domination Department will be in touch."; joinForm.reset(); }
+          else { joinStatus.style.color = 'var(--pink)'; joinStatus.textContent = (res.d && res.d.error) || 'Something glitched. Try again.'; }
+        })
+        .catch(function(){ joinStatus.style.color = 'var(--pink)'; joinStatus.textContent = 'Something glitched. Try again.'; })
+        .finally(function(){ btn.disabled = false; });
+    });
+  }
+
+  // ---- dynamic sections: shows / live / merch / crew ----
+  var D = window.TNR || {};
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function safeUrl(u){ u = String(u || '').trim(); return /^(https?:\/\/|\/|#|mailto:)/i.test(u) ? u : ''; }
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); if (!m) return esc(iso || '');
+    return MONTHS[+m[2]-1] + ' ' + (+m[3]) + ', ' + m[1];
+  }
+  function prefill(type, what){
+    var t = document.getElementById('c-type'), s = document.getElementById('c-show');
+    if (t) t.value = type; if (s) s.value = what || '';
+    var box = document.getElementById('contact'); if (box) box.scrollIntoView({ behavior:'smooth', block:'start' });
+    setTimeout(function(){ var n = document.getElementById('c-name'); if (n) n.focus({ preventScroll:true }); }, 450);
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-request]');
+    if (!b) return; e.preventDefault(); prefill(b.getAttribute('data-request'), b.getAttribute('data-what'));
+  });
+
+  var showList = document.getElementById('show-list');
+  if (showList){
+    var now = new Date(); var today = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    var up = (D.shows || []).filter(function(s){ return s && s.date >= today; }).sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+    if (!up.length){
+      showList.innerHTML = '<div class="empty-card"><h3>No dates on the board yet</h3><p>New shows get announced here and on Instagram first. Want TripN DaRain at your event?</p>' +
+        '<div class="btns"><a href="#contact" class="btn btn-primary btn-sm" data-request="Booking">Book us</a><a href="#join" class="btn btn-ghost btn-sm">Get show alerts</a></div></div>';
+    } else {
+      showList.innerHTML = up.map(function(s){
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s.date) || [];
+        var tix = safeUrl(s.ticketUrl);
+        var what = (s.name || 'Show') + ' — ' + fmtDate(s.date);
+        return '<article class="show-row">' +
+          '<div class="show-date"><span class="m">' + (MONTHS[+m[2]-1] || '') + '</span><span class="d">' + (+m[3] || '') + '</span><span class="y">' + (m[1] || '') + '</span></div>' +
+          '<div><h3 class="show-name">' + esc(s.name || 'TripN DaRain live') + '</h3>' +
+          '<div class="show-where">' + esc([s.venue, s.city].filter(Boolean).join(' · ')) + '</div>' +
+          (s.note ? '<div class="show-note">' + esc(s.note) + '</div>' : '') + '</div>' +
+          '<div class="show-cta">' + (tix ? '<a class="btn btn-primary btn-sm" href="' + esc(tix) + '" target="_blank" rel="noopener">Get tickets</a>' : '') +
+          '<a class="btn btn-ghost btn-sm" href="#contact" data-request="Tickets" data-what="' + esc(what) + '">' + (tix ? 'Ask us' : 'Request tickets') + '</a></div>' +
+        '</article>';
+      }).join('');
+    }
+  }
+
+  var liveGrid = document.getElementById('live-grid');
+  if (liveGrid){
+    var items = D.live || [];
+    if (!items.length){
+      liveGrid.innerHTML = '<div class="empty-card" style="grid-column:1/-1"><h3>Footage loading&hellip;</h3><p>Photos and videos from past shows land here. Were you there? Tag <strong>@tripndarain</strong> on Instagram.</p>' +
+        '<div class="btns"><a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">Instagram</a></div></div>';
+    } else {
+      liveGrid.innerHTML = items.map(function(it, i){
+        var meta = esc([it.place, it.date ? fmtDate(it.date) : ''].filter(Boolean).join(' · '));
+        var title = esc(it.title || '');
+        var thumb;
+        if (it.type === 'youtube' && /^[\w-]{6,20}$/.test(it.id || '')){
+          thumb = '<button class="media-thumb wide video-frame" data-yt="' + it.id + '" aria-label="Play ' + title + '">' +
+            '<img src="https://i.ytimg.com/vi/' + it.id + '/hqdefault.jpg" alt="" loading="lazy">' +
+            '<span class="play-badge"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></span><span class="media-kind">Video</span></button>';
+        } else {
+          var link = safeUrl(it.url), img = safeUrl(it.image);
+          var inner = (img ? '<img src="' + esc(img) + '" alt="' + title + '" loading="lazy">' : '<span class="ph">' + (title || 'TripN DaRain live') + '</span>') +
+            '<span class="media-kind">' + (it.type === 'instagram' ? 'Instagram' : 'Photo') + '</span>';
+          thumb = link ? '<a class="media-thumb" href="' + esc(link) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="media-thumb">' + inner + '</div>';
+        }
+        return '<article class="media-card">' + thumb + ((title || meta) ? '<div class="media-body">' + (title ? '<h3 class="media-title">' + title + '</h3>' : '') + (meta ? '<div class="media-meta">' + meta + '</div>' : '') + '</div>' : '') + '</article>';
+      }).join('');
+      liveGrid.querySelectorAll('.video-frame').forEach(function(frame){
+        frame.addEventListener('click', function(){
+          var id = frame.getAttribute('data-yt'); if (!id) return;
+          var f = document.createElement('iframe');
+          f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+          f.title = 'YouTube video player'; f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture'); f.setAttribute('allowfullscreen','');
+          frame.innerHTML = ''; frame.appendChild(f); frame.style.cursor = 'default';
+        }, { once:true });
+      });
+    }
+  }
+
+  var merchGrid = document.getElementById('merch-grid');
+  if (merchGrid){
+    var goods = D.merch || [];
+    if (!goods.length){
+      merchGrid.innerHTML = '<div class="empty-card" style="grid-column:1/-1"><h3>Merch drop incoming</h3><p>Shirts and more are on the way. Follow <strong>@tripndarain</strong> for the drop, or reserve yours now.</p>' +
+        '<div class="btns"><a href="#contact" class="btn btn-primary btn-sm" data-request="Merch">Reserve merch</a><a class="btn btn-ghost btn-sm" href="https://www.instagram.com/tripndarain" target="_blank" rel="noopener">Instagram</a></div></div>';
+    } else {
+      merchGrid.innerHTML = goods.map(function(g){
+        var img = safeUrl(g.image), url = safeUrl(g.url), name = esc(g.name || 'Merch');
+        var btn = url ? '<a class="btn btn-primary btn-sm" href="' + esc(url) + '" target="_blank" rel="noopener">Get it</a>'
+                      : '<a class="btn btn-primary btn-sm" href="#contact" data-request="Merch" data-what="' + name + '">Order</a>';
+        return '<article class="media-card"><div class="media-thumb">' + (img ? '<img src="' + esc(img) + '" alt="' + name + '" loading="lazy">' : '<span class="ph">' + name + '</span>') + '</div>' +
+          '<div class="media-body"><h3 class="media-title">' + name + '</h3>' + (g.price ? '<div class="media-price">' + esc(g.price) + '</div>' : '') + btn + '</div></article>';
+      }).join('');
+    }
+  }
+
+  var crewGrid = document.getElementById('crew-grid');
+  if (crewGrid){
+    crewGrid.innerHTML = (D.crew || []).map(function(c){
+      var img = safeUrl(c.image), name = esc(c.name || '');
+      var initials = (c.name || '?').split(/\s+/).map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
+      var links = (c.links || []).map(function(l){ var u = safeUrl(l.url); return u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(l.label || 'Link') + '</a>' : ''; }).join('');
+      return '<article class="media-card crew-card' + (c.label ? ' label' : '') + '"><div class="crew-top"><div class="crew-avatar">' + (img ? '<img src="' + esc(img) + '" alt="">' : esc(initials)) + '</div>' +
+        '<div><div class="crew-role">' + esc(c.role || 'Artist') + '</div><h3 class="media-title">' + name + '</h3></div></div>' +
+        (c.blurb ? '<p>' + esc(c.blurb) + '</p>' : '') + (links ? '<div class="crew-links">' + links + '</div>' : '') + '</article>';
+    }).join('');
+  }
+
+  // ---- contact / tickets / booking form ----
+  var cForm = document.getElementById('contact-form');
+  var cStatus = document.getElementById('contact-status');
+  if (cForm){
+    cForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      var f = cForm.elements;
+      var body = { name:f.name.value.trim(), email:f.email.value.trim(), type:f.type.value, show:f.show.value.trim(), message:f.message.value.trim(), website:f.website.value };
+      cStatus.style.color = 'var(--pink)';
+      if (!body.name || !body.email || !body.message){ cStatus.textContent = 'Name, email, and a message, please.'; return; }
+      var btn = cForm.querySelector('button[type=submit]'); btn.disabled = true;
+      cStatus.style.color = ''; cStatus.textContent = 'Transmitting...';
+      fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok:r.ok, d:d }; }); })
+        .then(function(res){
+          if (res.ok){ cStatus.textContent = "Got it. We'll get back to you soon."; cForm.reset(); }
+          else { cStatus.style.color = 'var(--pink)'; cStatus.textContent = (res.d && res.d.error) || 'Something glitched. Try again.'; }
+        })
+        .catch(function(){ cStatus.style.color = 'var(--pink)'; cStatus.textContent = 'Something glitched. Try again.'; })
+        .finally(function(){ btn.disabled = false; });
+    });
+  }
+
+  // ---- the easy button: hero logo plays the SoundCloud playlist ----
+  var easyBtn = document.getElementById('easy-btn');
+  var easyBubble = document.getElementById('easy-bubble');
+  var pauseBtn = document.getElementById('storm-pause');
+  var scDock = document.getElementById('sc-dock');
+  var scFrame = document.getElementById('sc-frame');
+  var scNow = document.getElementById('sc-now');
+  var SC_PLAYLIST_URL = 'https://soundcloud.com/trip-n-da-rain/sets/listen-to-these';
+  var SC_WIDGET_SRC = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent('https://api.soundcloud.com/playlists/2214702131') +
+    '&color=%23ff2d95&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+  var LINES_PLAY = ['Easy.<br>Now it’s a problem.', 'Told you.<br>Easy.', 'Volume up.<br>Trust us.'];
+  var LINES_PAUSE = ['Okay, fine.<br>Press again.', 'Quiet mode.<br>Boring, but okay.'];
+  var presses = 0, widget = null, widgetReady = false, wantPlay = false, isPlaying = false, nudgeTimer = null, dockTimer = null;
+
+  var bubbleTimer = null;
+  function showBubble(ms){
+    if (!easyBubble) return;
+    easyBubble.classList.remove('gone');
+    easyBubble.classList.remove('pop'); void easyBubble.offsetWidth; easyBubble.classList.add('pop');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(function(){ easyBubble.classList.add('gone'); }, ms);
+  }
+  function say(html, ms){
+    if (!easyBubble) return;
+    easyBubble.classList.remove('asking');
+    easyBubble.innerHTML = html;
+    showBubble(ms || 3800);
+  }
+  // pop the question in a beat after the page has loaded, then let it drift away
+  function askSoon(){ setTimeout(function(){ if (easyBubble && easyBubble.classList.contains('asking')) showBubble(9000); }, 1200); }
+  if (document.readyState === 'complete') askSoon(); else window.addEventListener('load', askSoon);
+  if (easyBubble){
+    easyBubble.addEventListener('pointerenter', function(){ clearTimeout(bubbleTimer); });
+    easyBubble.addEventListener('focusin', function(){ clearTimeout(bubbleTimer); });
+  }
+
+  // ---- make the hero logo follow the track's loudness (SoundCloud publishes each track's waveform) ----
+  var globeWrap = document.querySelector('.globe-wrap');
+  var react = { wave:null, url:'', dur:0, pos:0, at:0, lvl:0, avg:0.5, beat:0, raf:0 };
+  function loadWave(snd){
+    var url = (snd.waveform_url || '').replace(/\.png$/, '.json');
+    react.dur = snd.duration || 0;
+    if (!url || url === react.url) return;
+    react.url = url; react.wave = null;
+    fetch(url).then(function(r){ return r.json(); }).then(function(j){
+      if (react.url !== url || !j || !j.samples) return;
+      var a = j.samples, lo = Infinity, hi = -Infinity;
+      for (var i = 0; i < a.length; i++){ if (a[i] < lo) lo = a[i]; if (a[i] > hi) hi = a[i]; }
+      var span = Math.max(1, hi - lo);
+      react.wave = a.map(function(v){ return (v - lo) / span; });
+    }).catch(function(){});
+  }
+  function reactLoop(ts){
+    react.raf = requestAnimationFrame(reactLoop);
+    if (!globeWrap) return;
+    var target = 0.35;
+    if (react.wave && react.dur){
+      var pos = react.pos + (performance.now() - react.at);
+      var f = Math.max(0, Math.min(0.99999, pos / react.dur)) * (react.wave.length - 1);
+      var i = Math.floor(f), t = f - i;
+      target = react.wave[i] * (1 - t) + react.wave[Math.min(i + 1, react.wave.length - 1)] * t;
+    }
+    // energy relative to the recent average, so drops stand out and breakdowns calm down
+    react.avg += (target - react.avg) * 0.01;
+    var energy = Math.max(0, Math.min(1, 0.25 + (target - react.avg) * 2.2 + target * 0.45));
+    // a kick-like pulse at ~140 BPM whose strength follows the loudness
+    var beatPhase = (ts / 428.6) % 1;
+    var kick = Math.exp(-beatPhase * 6);
+    var goal = energy * (0.55 + 0.45 * kick);
+    react.lvl += (goal - react.lvl) * (goal > react.lvl ? 0.5 : 0.12);
+    globeWrap.style.setProperty('--lvl', react.lvl.toFixed(3));
+  }
+  function setReactive(on){
+    if (!globeWrap) return;
+    globeWrap.classList.toggle('reactive', on);
+    cancelAnimationFrame(react.raf);
+    if (on && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) react.raf = requestAnimationFrame(reactLoop);
+    else globeWrap.style.setProperty('--lvl', '0');
+  }
+
+  function setPlaying(on){
+    setReactive(on);
+    isPlaying = on;
+    if (easyBtn){ easyBtn.classList.toggle('playing', on); easyBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); easyBtn.setAttribute('aria-label', on ? 'Pause TripN DaRain' : 'Play TripN DaRain'); }
+    if (pauseBtn) pauseBtn.hidden = !on;
+  }
+  function openDock(stayMs){
+    if (!scDock) return;
+    scDock.classList.add('open'); scDock.setAttribute('aria-hidden', 'false');
+    clearTimeout(dockTimer);
+    if (stayMs) dockTimer = setTimeout(closeDock, stayMs);
+  }
+  function closeDock(){
+    if (!scDock) return;
+    clearTimeout(dockTimer);
+    scDock.classList.remove('open'); scDock.setAttribute('aria-hidden', 'true');
+  }
+  function openSoundCloud(){
+    say('Opening SoundCloud…<br>Still easy.');
+    window.open(SC_PLAYLIST_URL, '_blank', 'noopener');
+  }
+
+  // load the widget quietly after the page is up, so it's ready by the time someone taps
+  var widgetLoading = false;
+  function loadWidget(){
+    if (widgetLoading || !scFrame) return;
+    widgetLoading = true;
+    scFrame.src = SC_WIDGET_SRC;
+    var js = document.createElement('script');
+    js.src = 'https://w.soundcloud.com/player/api.js';
+    js.async = true;
+    js.onload = function(){
+      if (!window.SC || !SC.Widget) return;
+      widget = SC.Widget(scFrame);
+      var E = SC.Widget.Events;
+      widget.bind(E.READY, function(){ widgetReady = true; if (wantPlay) widget.play(); });
+      widget.bind(E.PLAY_PROGRESS, function(e){ if (e && typeof e.currentPosition === 'number'){ react.pos = e.currentPosition; react.at = performance.now(); } });
+      widget.bind(E.PLAY, function(){
+        widget.getCurrentSound(function(snd){ if (snd) loadWave(snd); });
+        clearTimeout(nudgeTimer);
+        var first = !isPlaying;
+        setPlaying(true);
+        if (wantPlay && first) say(LINES_PLAY[(presses - 1 + LINES_PLAY.length) % LINES_PLAY.length]);
+        wantPlay = false;
+        if (scDock && scDock.classList.contains('open')) openDock(2500);
+        widget.getCurrentSound(function(snd){ if (snd && snd.title && scNow) scNow.textContent = '🎵 ' + snd.title; });
+      });
+      widget.bind(E.PAUSE, function(){ setPlaying(false); });
+      widget.bind(E.FINISH, function(){
+        widget.getSounds(function(list){ widget.getCurrentSoundIndex(function(i){ if (list && i >= list.length - 1) setPlaying(false); }); });
+      });
+    };
+    js.onerror = function(){ widgetLoading = false; };
+    document.head.appendChild(js);
+  }
+  window.addEventListener('load', function(){ setTimeout(loadWidget, 1500); });
+
+  function startMusic(){
+    wantPlay = true;
+    loadWidget();
+    if (widget && widgetReady) widget.play();
+    else say('Loading the tunes…', 2500);
+    // some phones only let SoundCloud play from a tap inside its own player; show it if we're not rolling yet
+    clearTimeout(nudgeTimer);
+    nudgeTimer = setTimeout(function(){
+      if (isPlaying) return;
+      if (!widget){ openSoundCloud(); return; }
+      openDock();
+      say('Your phone wants one more tap.<br>Hit ▶ in the player 👇', 6000);
+    }, 2600);
+  }
+  function stopMusic(){
+    wantPlay = false;
+    if (widget) widget.pause();
+    setPlaying(false);
+  }
+
+  if (easyBtn){
+    easyBtn.addEventListener('click', function(){
+      easyBtn.classList.remove('bonk'); void easyBtn.offsetWidth; easyBtn.classList.add('bonk');
+      presses++;
+      if (!isPlaying) startMusic();
+      else { stopMusic(); say(LINES_PAUSE[(presses - 1) % LINES_PAUSE.length]); }
+    });
+    easyBtn.addEventListener('animationend', function(e){ if (e.animationName === 'bonk') easyBtn.classList.remove('bonk'); });
+    if (pauseBtn) pauseBtn.addEventListener('click', stopMusic);
+    var scClose = document.getElementById('sc-close');
+    if (scClose) scClose.addEventListener('click', closeDock);
+    // the bubble asks first; "Yes" is the tap browsers need before sound can play
+    var ebYes = document.getElementById('eb-yes'), ebNo = document.getElementById('eb-no');
+    if (ebYes) ebYes.addEventListener('click', function(){ easyBtn.click(); });
+    if (ebNo) ebNo.addEventListener('click', function(){ say('No problem.<br>Stick around though.<br>It gets good.', 5000); });
+  }
+
+  // ---- storm: after you scroll past the hero, the rain builds and the old logo surfaces ----
+  var STORM_RAMP = 150;              // seconds past the hero until the storm is at full strength
+  var storm = 0, stormSecs = 0, pastHero = false;
+  var stormLogo = document.getElementById('storm-logo');
+  var heroEl = document.querySelector('.hero');
+  if (heroEl && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      pastHero = !entries[0].isIntersecting;
+      paintStormLogo();
+    }, { threshold: 0 }).observe(heroEl);
+  }
+  var rootStyle = document.documentElement.style;
+  function paintStormLogo(){
+    if (!stormLogo) return;
+    stormLogo.style.opacity = pastHero ? (0.10 + storm * 0.40).toFixed(3) : '0';
+    stormLogo.style.filter = 'blur(' + (8 - storm * 7.5).toFixed(1) + 'px)';
+    // cards turn to glass as the storm builds so the logo shows through them
+    var a = pastHero ? (0.94 - storm * 0.36) : 0.97;
+    rootStyle.setProperty('--surface', 'rgba(18,16,25,' + a.toFixed(3) + ')');
+    rootStyle.setProperty('--surface-2', 'rgba(23,21,31,' + a.toFixed(3) + ')');
+    rootStyle.setProperty('--bg-elevated', 'rgba(11,11,18,' + a.toFixed(3) + ')');
+    updatePill();
+  }
+
+  // weather report pill: tells people something is happening back there
+  var pill = document.getElementById('storm-pill');
+  var pillText = document.getElementById('storm-text');
+  var pillDismissed = false, peekTimer = null;
+  var REPORTS = [
+    [0.06, '☔ Stick around. It’s about to pour.'],
+    [0.40, '🌧️ Stick around. Something’s behind the rain…'],
+    [0.75, '⛈️ Downpour. Look back there.'],
+    [0.98, '🚨 Flood warning!']
+  ];
+  function updatePill(){
+    if (!pill) return;
+    var msg = null;
+    for (var i = 0; i < REPORTS.length; i++){ if (storm >= REPORTS[i][0]) msg = REPORTS[i][1]; }
+    if (msg && pillText.textContent !== msg){ pillText.textContent = msg; pillDismissed = false; }
+    pill.classList.toggle('show', !!msg && pastHero && !pillDismissed);
+  }
+  function peek(){
+    document.body.classList.add('peek');
+    clearTimeout(peekTimer);
+    peekTimer = setTimeout(function(){ document.body.classList.remove('peek'); }, 3500);
+  }
+  if (pill){
+    document.getElementById('storm-peek').addEventListener('click', peek);
+    document.getElementById('storm-x').addEventListener('click', function(){ pillDismissed = true; updatePill(); });
+    document.addEventListener('click', function(e){
+      if (document.body.classList.contains('peek') && !pill.contains(e.target)){ clearTimeout(peekTimer); document.body.classList.remove('peek'); }
+    });
+  }
+  // rain runs on its own faster clock from the moment the page loads:
+  // steady rain right away, full downpour in about a minute (logo + lightning keep the slower clock)
+  var RAIN_START = 0.28, RAIN_RAMP = 60, rainSecs = 0;
+  var rain = RAIN_START;
+  setInterval(function(){
+    if (document.hidden) return;
+    rainSecs = Math.min(RAIN_RAMP, rainSecs + 1);
+    var t = rainSecs / RAIN_RAMP;
+    rain = RAIN_START + (1 - RAIN_START) * (t * t * (3 - 2 * t));
+  }, 1000);
+  setInterval(function(){
+    if (!pastHero || document.hidden) return;
+    stormSecs = Math.min(STORM_RAMP, stormSecs + 1);
+    var t = stormSecs / STORM_RAMP;
+    storm = t * t * (3 - 2 * t);     // smooth ease in/out
+    paintStormLogo();
+  }, 1000);
+
+  // ---- ambient rain / neon-drip canvas ----
+  var canvas = document.getElementById('rain-canvas');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (canvas && canvas.getContext && !reduceMotion){
+    var ctx = canvas.getContext('2d');
+    var W, H, drops, dpr, baseCount = 18, lastW = 0;
+    var COLORS = ['rgba(0,230,255,', 'rgba(255,45,149,', 'rgba(179,75,255,', 'rgba(195,255,61,'];
+
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      baseCount = Math.max(32, Math.min(60, Math.floor(W / 28)));
+      if (W !== lastW || !drops){       // iOS fires resize on scroll (address bar); keep the storm going
+        lastW = W; drops = [];
+        for (var i = 0; i < baseCount; i++){ drops.push(makeDrop(true)); }
+      }
+    }
+    var wind = 0;                       // horizontal drift per unit fall, grows with the storm
+    function makeDrop(initial){
+      var big = 1 + rain * 2.2;        // drops born later in the storm are longer and fatter
+      var spread = Math.abs(wind) * H;
+      return {
+        x: -spread + Math.random() * (W + spread),
+        y: initial ? Math.random() * H : -20 - Math.random() * 120,
+        len: (24 + Math.random() * 46) * big,
+        speed: (90 + Math.random() * 140) * (1 + rain * 0.8),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        alpha: 0.28 + Math.random() * 0.32,
+        w: (1 + Math.random() * 1.4) * (1 + rain * 1.6)
+      };
+    }
+    var splashes = [];
+    var flash = 0, nextFlashCheck = 0;
+    var last = null;
+    function frame(ts){
+      if (last === null) last = ts;
+      var dt = Math.min(0.05, (ts - last) / 1000);
+      last = ts;
+      ctx.clearRect(0, 0, W, H);
+
+      // more, faster, brighter, slanted
+      var target = Math.round(baseCount * (1 + rain * 6));
+      var add = Math.ceil((target - drops.length) * 0.05);
+      for (var k = 0; k < add; k++) drops.push(makeDrop(false));
+      if (drops.length > target) drops.pop();
+      var spd = 1 + rain * 2.2, alp = 1 + rain * 1.1;
+      wind = rain * (0.18 + 0.08 * Math.sin(ts / 2300));   // gusts
+      canvas.style.opacity = (0.85 + rain * 0.15).toFixed(3);
+
+      for (var i = 0; i < drops.length; i++){
+        var d = drops[i];
+        var fall = d.speed * spd * dt;
+        d.y += fall; d.x += fall * wind;
+        var tx = d.x - d.len * wind, ty = d.y - d.len;
+        var grad = ctx.createLinearGradient(tx, ty, d.x, d.y);
+        grad.addColorStop(0, d.color + '0)');
+        grad.addColorStop(0.35, d.color + Math.min(0.95, d.alpha * alp * 0.45).toFixed(3) + ')');
+        grad.addColorStop(1, d.color + Math.min(0.95, d.alpha * alp).toFixed(3) + ')');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = d.w;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(d.x, d.y);
+        ctx.stroke();
+        if (d.y > H - 4 && !d.hit && rain > 0.15 && Math.random() < 0.35 && splashes.length < 90){
+          d.hit = true;
+          splashes.push({ x: d.x, r: 1, max: 6 + d.w * 4, a: Math.min(0.8, d.alpha * alp), color: d.color });
+        }
+        if (ty > H || d.x < -60 || tx > W + 60){
+          drops[i] = makeDrop(false);
+        }
+      }
+
+      // splashes along the bottom edge
+      for (var j = splashes.length - 1; j >= 0; j--){
+        var sp = splashes[j];
+        sp.r += 60 * dt; sp.a -= 1.6 * dt;
+        if (sp.a <= 0 || sp.r > sp.max){ splashes.splice(j, 1); continue; }
+        ctx.strokeStyle = sp.color + sp.a.toFixed(3) + ')';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.ellipse(sp.x, H - 3, sp.r * 1.8, sp.r * 0.45, 0, Math.PI, 2 * Math.PI);
+        ctx.stroke();
+      }
+
+      // lightning once it's properly storming
+      if (ts > nextFlashCheck){
+        nextFlashCheck = ts + 1000;
+        if (pastHero && storm > 0.55 && Math.random() < (storm - 0.5) * 0.18){
+          flash = 1;
+          document.body.classList.add('flash');
+          setTimeout(function(){ document.body.classList.remove('flash'); }, 380);
+        }
+      }
+      if (flash > 0){
+        var f = flash > 0.6 ? flash : (flash > 0.35 ? 0.15 : flash * 0.9);   // double flicker
+        ctx.fillStyle = 'rgba(225,235,255,' + (f * 0.28).toFixed(3) + ')';
+        ctx.fillRect(0, 0, W, H);
+        flash -= 2.4 * dt;
+      }
+      requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(frame);
+  }
+})();
+</script>
+
+</body></html>
