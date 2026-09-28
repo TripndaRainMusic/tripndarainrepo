@@ -76,7 +76,7 @@
 
   /* storm logo: fades in behind content once you leave the hero, clearer the longer you stay */
   .storm-logo{
-    position:fixed; inset:0; z-index:0; pointer-events:none;
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; contain:strict;
     display:flex; align-items:center; justify-content:center;
     opacity:0; filter:blur(10px);
     transition:opacity 1.8s ease, filter 1.8s ease;
@@ -85,6 +85,7 @@
     width:min(74vw, 520px); max-height:78vh; height:auto; object-fit:contain;
     filter:drop-shadow(0 0 40px rgba(0,230,255,.18)) drop-shadow(0 0 70px rgba(255,45,149,.12));
   }
+  .hero{ overflow-x:clip; }
   .wrap{ max-width:var(--max); margin:0 auto; position:relative; z-index:1; transition:opacity .9s ease; }
   .nav{ transition:opacity .9s ease; }
   .storm-logo img{ transition:filter .9s ease; }
@@ -106,6 +107,7 @@
     backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
     font:600 .82rem/1.25 var(--font-body); color:var(--text);
   }
+  .storm-pill:not(.show){ visibility:hidden; transition:transform .6s ease, opacity .4s ease, visibility 0s .6s; }
   .storm-pill.show{ transform:translate(-50%, 0); opacity:1; }
   .storm-pill .sp-text{ min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .storm-pill button{
@@ -157,7 +159,7 @@
   .eyebrow::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--lime); box-shadow:0 0 10px var(--lime); }
   /* ---- globe / ring / laser hero mark ---- */
   .globe-wrap{
-    position:relative; width:min(380px, 82vw); aspect-ratio:1; margin:0 auto 1.75rem;
+    position:relative; width:min(540px, 96vw); aspect-ratio:1; margin:-.75rem auto 1.4rem;
     display:flex; align-items:center; justify-content:center;
   }
   .laser{
@@ -182,7 +184,7 @@
     font-size:9.5px; letter-spacing:2.5px; text-transform:uppercase;
   }
   .globe{
-    position:relative; width:58%; height:58%; border-radius:50%; overflow:hidden;
+    position:relative; width:55%; height:55%; border-radius:50%; overflow:hidden;
     border:1px solid rgba(255,255,255,.14);
     background:
       radial-gradient(circle at 30% 26%, rgba(255,255,255,.16), rgba(255,255,255,0) 40%),
@@ -205,7 +207,7 @@
   .globe-word{
     position:relative; z-index:2; display:flex; flex-direction:column; align-items:center;
     font-family:var(--font-display); font-weight:700; line-height:.98; text-align:center;
-    font-size:clamp(1.35rem, 6.6vw, 2.1rem); letter-spacing:-.01em;
+    font-size:clamp(1.8rem, 9.4vw, 3.1rem); letter-spacing:-.01em;
     background:linear-gradient(120deg, var(--cyan), var(--pink), var(--purple), var(--lime), var(--cyan));
     background-size:320% 320%; -webkit-background-clip:text; background-clip:text; color:transparent;
     animation:colorshift 7s ease infinite;
@@ -225,13 +227,26 @@
   button.globe:active{ transform:scale(.93); }
   button.globe:focus-visible{ outline:2px solid var(--cyan); outline-offset:6px; }
   .easy-icon{
-    position:absolute; left:50%; bottom:13%; width:22px; height:22px; transform:translateX(-50%);
+    position:absolute; left:50%; bottom:12%; width:clamp(22px, 6.5vw, 30px); height:clamp(22px, 6.5vw, 30px); transform:translateX(-50%);
     z-index:2; fill:var(--text); opacity:.8; filter:drop-shadow(0 0 6px rgba(0,230,255,.7));
   }
   .easy-icon .i-pause{ display:none; }
   .globe.playing .easy-icon .i-play{ display:none; }
   .globe.playing .easy-icon .i-pause{ display:inline; }
-  .globe.playing{ animation:beat .4286s ease-out infinite; }   /* ~140 BPM */
+  /* while music plays, JS sets --lvl (0..1) from the track's real loudness curve */
+  .globe-wrap{ --lvl:0; }
+  .globe-wrap.reactive .globe{
+    transform:scale(calc(1 + var(--lvl) * .07));
+    box-shadow:
+      inset 0 0 44px rgba(0,0,0,.65),
+      0 0 calc(40px + var(--lvl) * 70px) rgba(255,45,149,calc(.25 + var(--lvl) * .45)),
+      0 0 calc(80px + var(--lvl) * 110px) rgba(0,230,255,calc(.12 + var(--lvl) * .35));
+    transition:none;
+  }
+  .globe-wrap.reactive .globe-word{ filter:drop-shadow(0 0 calc(10px + var(--lvl) * 22px) rgba(255,45,149,calc(.35 + var(--lvl) * .5))) brightness(calc(1 + var(--lvl) * .35)); }
+  .globe-wrap.reactive .laser{ opacity:calc(.3 + var(--lvl) * .7); }
+  .globe-wrap.reactive .ring-a, .globe-wrap.reactive .ring-b{ opacity:calc(.6 + var(--lvl) * .8); }
+  .globe-wrap.reactive .ring-text{ filter:drop-shadow(0 0 calc(3px + var(--lvl) * 8px) rgba(164,246,255,calc(.45 + var(--lvl) * .5))); }
   @keyframes beat{
     0%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 80px rgba(255,45,149,.55), 0 0 140px rgba(0,230,255,.35); }
     100%{ box-shadow:inset 0 0 44px rgba(0,0,0,.65), 0 0 40px rgba(255,45,149,.2), 0 0 80px rgba(0,230,255,.1); }
@@ -263,8 +278,8 @@
   .easy-bubble.pop{ animation:bubblepop .35s cubic-bezier(.2,.9,.3,1.5); }
   @keyframes bubblebob{ 0%,100%{ transform:translateY(0) rotate(-2deg);} 50%{ transform:translateY(-5px) rotate(1deg);} }
   @keyframes bubblepop{ 0%{ transform:scale(.6);} 100%{ transform:scale(1);} }
-  @media (max-width:640px){ .easy-bubble{ right:-1%; top:0; font-size:.78rem; max-width:8.5rem; } }
-  @media (prefers-reduced-motion: reduce){ .easy-bubble, .globe.playing{ animation:none; } }
+  @media (max-width:640px){ .easy-bubble{ right:7%; top:1%; font-size:.78rem; max-width:8.5rem; } .easy-bubble.asking{ max-width:10.5rem; } }
+  @media (prefers-reduced-motion: reduce){ .easy-bubble{ animation:none; } .globe-wrap.reactive .globe{ transform:none; } }
   /* SoundCloud mini-player dock: stays hidden while the logo drives playback, slides up if a tap is needed */
   .sc-dock{
     position:fixed; left:50%; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:70;
@@ -274,11 +289,13 @@
     transform:translate(-50%, calc(100% + 40px)); opacity:0; pointer-events:none;
     transition:transform .5s cubic-bezier(.2,.9,.3,1.1), opacity .35s ease;
   }
+  .sc-dock{ overflow:hidden; contain:layout paint; }
+  .sc-dock:not(.open){ visibility:hidden; transition:transform .5s cubic-bezier(.2,.9,.3,1.1), opacity .35s ease, visibility 0s .5s; }
   .sc-dock.open{ transform:translate(-50%, 0); opacity:1; pointer-events:auto; }
   .sc-dock-head{ display:flex; align-items:center; gap:.5rem; padding:0 .2rem .45rem .35rem; }
   .sc-now{ flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font:600 .8rem/1.2 var(--font-body); color:var(--text); }
   .sc-close{ flex:none; width:28px; height:28px; border:0; border-radius:50%; background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; }
-  .sc-dock iframe{ display:block; width:100%; height:166px; border:0; border-radius:12px; }
+  .sc-dock iframe{ display:block; width:1px; min-width:100%; max-width:100%; height:166px; border:0; border-radius:12px; }
   .storm-pill .sp-pause{ flex:none; width:32px; height:32px; background:rgba(255,255,255,.08); color:var(--text); }
   .logo-mark-small{ width:34px; height:auto; opacity:.85; border-radius:6px; margin:0 auto .75rem; }
 
@@ -518,7 +535,13 @@
     .hero{ padding:3.2rem 0 3.6rem; }
   }
 
-  .ring-text text{ font-family:'Space Grotesk',system-ui,sans-serif !important; }
+  .ring-text text{
+    font-family:'Space Grotesk',system-ui,sans-serif !important;
+    fill:url(#ringChrome); font-weight:700; font-size:12.5px;
+    paint-order:stroke; stroke:rgba(75,58,107,.9); stroke-width:.9px;
+  }
+  .ring-text text.ring-glint{ fill:url(#ringGlint); stroke:none; }
+  .ring-text{ filter:drop-shadow(0 0 3px rgba(164,246,255,.6)) drop-shadow(0 0 10px rgba(255,209,243,.35)); }
   /* Logo-style display font (Shrikhand has one weight — avoid faux-bold) */
   h1,h2,h3,h4,.nav-logo,.globe-word,.ticker-track span,.video-title,.track-title,.saga-locked h4,
   .transmission-name,.char-name,.t-title{ font-weight:400 !important; letter-spacing:.005em; }
@@ -645,7 +668,7 @@
 <div class="bg-glow" aria-hidden="true"></div>
 <div class="storm-logo" id="storm-logo" aria-hidden="true"><img src="/img/tnr-mark.webp" alt="" decoding="async"></div>
 <div class="storm-pill" id="storm-pill" role="status" aria-live="polite">
-  <span class="sp-text" id="storm-text">☔ Drizzle detected…</span>
+  <span class="sp-text" id="storm-text">☔ Stick around. It’s about to pour.</span>
   <button type="button" class="sp-pause" id="storm-pause" aria-label="Pause music" hidden>❚❚</button>
   <button type="button" class="sp-peek" id="storm-peek">👀 Peek</button>
   <button type="button" class="sp-x" id="storm-x" aria-label="Dismiss rain report">✕</button>
@@ -686,8 +709,29 @@
       <div class="ring ring-b" aria-hidden="true"></div>
       <div class="ring ring-a" aria-hidden="true"></div>
       <svg class="ring-text" viewBox="0 0 200 200" aria-hidden="true">
-        <defs><path id="ringPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+        <defs>
+          <path id="ringPath" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/>
+          <linearGradient id="ringChrome" gradientUnits="userSpaceOnUse" x1="22" y1="22" x2="178" y2="178">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset=".18" stop-color="#d6e6ff"/>
+            <stop offset=".36" stop-color="#8fa6c9"/>
+            <stop offset=".5" stop-color="#ffd1f3"/>
+            <stop offset=".64" stop-color="#a4f6ff"/>
+            <stop offset=".8" stop-color="#ececff"/>
+            <stop offset="1" stop-color="#a3aec6"/>
+            <animateTransform attributeName="gradientTransform" type="rotate" from="0 100 100" to="-360 100 100" dur="7s" repeatCount="indefinite"/>
+          </linearGradient>
+          <!-- a narrow white glint that sweeps across the chrome letters -->
+          <linearGradient id="ringGlint" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="200" y2="100">
+            <stop offset=".40" stop-color="#fff" stop-opacity="0"/>
+            <stop offset=".49" stop-color="#fff" stop-opacity=".95"/>
+            <stop offset=".51" stop-color="#fff" stop-opacity=".95"/>
+            <stop offset=".60" stop-color="#fff" stop-opacity="0"/>
+            <animateTransform attributeName="gradientTransform" type="rotate" from="0 100 100" to="360 100 100" dur="3.2s" repeatCount="indefinite"/>
+          </linearGradient>
+        </defs>
         <text><textPath href="#ringPath" startOffset="0" textLength="489" lengthAdjust="spacing">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
+        <text class="ring-glint"><textPath href="#ringPath" startOffset="0" textLength="489" lengthAdjust="spacing">BASS DREAMS RECORDS &#8226; PROUDLY PRESENTS &#8226; </textPath></text>
       </svg>
       <button type="button" class="globe" id="easy-btn" aria-label="Play TripN DaRain" aria-pressed="false">
         <span class="globe-lcd" aria-hidden="true"></span>
@@ -1411,7 +1455,52 @@ window.TNR = {
     easyBubble.addEventListener('focusin', function(){ clearTimeout(bubbleTimer); });
   }
 
+  // ---- make the hero logo follow the track's loudness (SoundCloud publishes each track's waveform) ----
+  var globeWrap = document.querySelector('.globe-wrap');
+  var react = { wave:null, url:'', dur:0, pos:0, at:0, lvl:0, avg:0.5, beat:0, raf:0 };
+  function loadWave(snd){
+    var url = (snd.waveform_url || '').replace(/\.png$/, '.json');
+    react.dur = snd.duration || 0;
+    if (!url || url === react.url) return;
+    react.url = url; react.wave = null;
+    fetch(url).then(function(r){ return r.json(); }).then(function(j){
+      if (react.url !== url || !j || !j.samples) return;
+      var a = j.samples, lo = Infinity, hi = -Infinity;
+      for (var i = 0; i < a.length; i++){ if (a[i] < lo) lo = a[i]; if (a[i] > hi) hi = a[i]; }
+      var span = Math.max(1, hi - lo);
+      react.wave = a.map(function(v){ return (v - lo) / span; });
+    }).catch(function(){});
+  }
+  function reactLoop(ts){
+    react.raf = requestAnimationFrame(reactLoop);
+    if (!globeWrap) return;
+    var target = 0.35;
+    if (react.wave && react.dur){
+      var pos = react.pos + (performance.now() - react.at);
+      var f = Math.max(0, Math.min(0.99999, pos / react.dur)) * (react.wave.length - 1);
+      var i = Math.floor(f), t = f - i;
+      target = react.wave[i] * (1 - t) + react.wave[Math.min(i + 1, react.wave.length - 1)] * t;
+    }
+    // energy relative to the recent average, so drops stand out and breakdowns calm down
+    react.avg += (target - react.avg) * 0.01;
+    var energy = Math.max(0, Math.min(1, 0.25 + (target - react.avg) * 2.2 + target * 0.45));
+    // a kick-like pulse at ~140 BPM whose strength follows the loudness
+    var beatPhase = (ts / 428.6) % 1;
+    var kick = Math.exp(-beatPhase * 6);
+    var goal = energy * (0.55 + 0.45 * kick);
+    react.lvl += (goal - react.lvl) * (goal > react.lvl ? 0.5 : 0.12);
+    globeWrap.style.setProperty('--lvl', react.lvl.toFixed(3));
+  }
+  function setReactive(on){
+    if (!globeWrap) return;
+    globeWrap.classList.toggle('reactive', on);
+    cancelAnimationFrame(react.raf);
+    if (on && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) react.raf = requestAnimationFrame(reactLoop);
+    else globeWrap.style.setProperty('--lvl', '0');
+  }
+
   function setPlaying(on){
+    setReactive(on);
     isPlaying = on;
     if (easyBtn){ easyBtn.classList.toggle('playing', on); easyBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); easyBtn.setAttribute('aria-label', on ? 'Pause TripN DaRain' : 'Play TripN DaRain'); }
     if (pauseBtn) pauseBtn.hidden = !on;
@@ -1446,7 +1535,9 @@ window.TNR = {
       widget = SC.Widget(scFrame);
       var E = SC.Widget.Events;
       widget.bind(E.READY, function(){ widgetReady = true; if (wantPlay) widget.play(); });
+      widget.bind(E.PLAY_PROGRESS, function(e){ if (e && typeof e.currentPosition === 'number'){ react.pos = e.currentPosition; react.at = performance.now(); } });
       widget.bind(E.PLAY, function(){
+        widget.getCurrentSound(function(snd){ if (snd) loadWave(snd); });
         clearTimeout(nudgeTimer);
         var first = !isPlaying;
         setPlaying(true);
@@ -1499,7 +1590,7 @@ window.TNR = {
     // the bubble asks first; "Yes" is the tap browsers need before sound can play
     var ebYes = document.getElementById('eb-yes'), ebNo = document.getElementById('eb-no');
     if (ebYes) ebYes.addEventListener('click', function(){ easyBtn.click(); });
-    if (ebNo) ebNo.addEventListener('click', function(){ say('No problem.<br>Press the logo<br>when you’re ready.'); });
+    if (ebNo) ebNo.addEventListener('click', function(){ say('No problem.<br>Stick around though.<br>It gets good.', 5000); });
   }
 
   // ---- storm: after you scroll past the hero, the rain builds and the old logo surfaces ----
@@ -1531,8 +1622,8 @@ window.TNR = {
   var pillText = document.getElementById('storm-text');
   var pillDismissed = false, peekTimer = null;
   var REPORTS = [
-    [0.12, '☔ Drizzle detected…'],
-    [0.40, '🌧️ Something’s behind the rain…'],
+    [0.06, '☔ Stick around. It’s about to pour.'],
+    [0.40, '🌧️ Stick around. Something’s behind the rain…'],
     [0.75, '⛈️ Downpour. Look back there.'],
     [0.98, '🚨 Flood warning!']
   ];
@@ -1555,6 +1646,16 @@ window.TNR = {
       if (document.body.classList.contains('peek') && !pill.contains(e.target)){ clearTimeout(peekTimer); document.body.classList.remove('peek'); }
     });
   }
+  // rain runs on its own faster clock from the moment the page loads:
+  // steady rain right away, full downpour in about a minute (logo + lightning keep the slower clock)
+  var RAIN_START = 0.28, RAIN_RAMP = 60, rainSecs = 0;
+  var rain = RAIN_START;
+  setInterval(function(){
+    if (document.hidden) return;
+    rainSecs = Math.min(RAIN_RAMP, rainSecs + 1);
+    var t = rainSecs / RAIN_RAMP;
+    rain = RAIN_START + (1 - RAIN_START) * (t * t * (3 - 2 * t));
+  }, 1000);
   setInterval(function(){
     if (!pastHero || document.hidden) return;
     stormSecs = Math.min(STORM_RAMP, stormSecs + 1);
@@ -1588,16 +1689,16 @@ window.TNR = {
     }
     var wind = 0;                       // horizontal drift per unit fall, grows with the storm
     function makeDrop(initial){
-      var big = 1 + storm * 2.2;        // drops born later in the storm are longer and fatter
+      var big = 1 + rain * 2.2;        // drops born later in the storm are longer and fatter
       var spread = Math.abs(wind) * H;
       return {
         x: -spread + Math.random() * (W + spread),
         y: initial ? Math.random() * H : -20 - Math.random() * 120,
         len: (24 + Math.random() * 46) * big,
-        speed: (90 + Math.random() * 140) * (1 + storm * 0.8),
+        speed: (90 + Math.random() * 140) * (1 + rain * 0.8),
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         alpha: 0.28 + Math.random() * 0.32,
-        w: (1 + Math.random() * 1.4) * (1 + storm * 1.6)
+        w: (1 + Math.random() * 1.4) * (1 + rain * 1.6)
       };
     }
     var splashes = [];
@@ -1610,13 +1711,13 @@ window.TNR = {
       ctx.clearRect(0, 0, W, H);
 
       // more, faster, brighter, slanted
-      var target = Math.round(baseCount * (1 + storm * 6));
+      var target = Math.round(baseCount * (1 + rain * 6));
       var add = Math.ceil((target - drops.length) * 0.05);
       for (var k = 0; k < add; k++) drops.push(makeDrop(false));
       if (drops.length > target) drops.pop();
-      var spd = 1 + storm * 2.2, alp = 1 + storm * 1.1;
-      wind = storm * (0.18 + 0.08 * Math.sin(ts / 2300));   // gusts
-      canvas.style.opacity = (0.85 + storm * 0.15).toFixed(3);
+      var spd = 1 + rain * 2.2, alp = 1 + rain * 1.1;
+      wind = rain * (0.18 + 0.08 * Math.sin(ts / 2300));   // gusts
+      canvas.style.opacity = (0.85 + rain * 0.15).toFixed(3);
 
       for (var i = 0; i < drops.length; i++){
         var d = drops[i];
@@ -1634,7 +1735,7 @@ window.TNR = {
         ctx.moveTo(tx, ty);
         ctx.lineTo(d.x, d.y);
         ctx.stroke();
-        if (d.y > H - 4 && !d.hit && storm > 0.2 && Math.random() < 0.35 && splashes.length < 90){
+        if (d.y > H - 4 && !d.hit && rain > 0.15 && Math.random() < 0.35 && splashes.length < 90){
           d.hit = true;
           splashes.push({ x: d.x, r: 1, max: 6 + d.w * 4, a: Math.min(0.8, d.alpha * alp), color: d.color });
         }
